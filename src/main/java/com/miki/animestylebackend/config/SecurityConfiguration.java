@@ -14,7 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 import static com.miki.animestylebackend.model.Permission.*;
-import static com.miki.animestylebackend.model.Role.STAFF;
+import static com.miki.animestylebackend.model.Role.*;
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -51,6 +51,12 @@ public class SecurityConfiguration {
                                 .requestMatchers(POST, "/api/v1/staff/**").hasAnyAuthority(STAFF_CREATE.name())
                                 .requestMatchers(PUT, "/api/v1/staff/**").hasAnyAuthority(STAFF_UPDATE.name())
                                 .requestMatchers(DELETE, "/api/v1/staff/**").hasAnyAuthority(STAFF_DELETE.name())
+
+                                .requestMatchers("/api/v1/admin/**").hasAnyRole(ADMIN.name())
+                                .requestMatchers(GET, "/api/v1/admin/**").hasAnyAuthority(ADMIN_READ.name())
+
+                                .requestMatchers("/api/v1/customer/**").hasAnyRole(CUSTOMER.name())
+                                .requestMatchers(GET, "/api/v1/customer/**").hasAnyAuthority(CUSTOMER_READ.name())
                                 .anyRequest()
                                 .authenticated()
                 )

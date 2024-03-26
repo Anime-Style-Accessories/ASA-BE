@@ -21,6 +21,22 @@ public enum Role {
                   STAFF_DELETE,
                   STAFF_CREATE
           )
+  ),
+  CUSTOMER(
+          Set.of(
+                  CUSTOMER_READ,
+                  CUSTOMER_UPDATE,
+                  CUSTOMER_DELETE,
+                  CUSTOMER_CREATE
+          )
+  ),
+  ADMIN(
+          Set.of(
+                  ADMIN_READ,
+                  ADMIN_UPDATE,
+                  ADMIN_DELETE,
+                  ADMIN_CREATE
+          )
   )
 
   ;
