@@ -1,6 +1,6 @@
 package com.miki.animestylebackend.model;
 
-import com.miki.animestylebackend.token.Token;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,22 +17,23 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "_user")
-public class User implements UserDetails {
+@Table(name = "users")
+public class User extends BaseEntity implements UserDetails {
 
-  @Id
-  @GeneratedValue
-  private Integer id;
   private String firstname;
   private String lastname;
   private String email;
   private String password;
+  private String phone;
+  private String address;
+  private String avatar;
 
   @Enumerated(EnumType.STRING)
   private Role role;
 
-  @OneToMany(mappedBy = "user")
-  private List<Token> tokens;
+//  @OneToMany(mappedBy = "user")
+//  @JsonIgnore
+//  private List<Token> tokens;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {

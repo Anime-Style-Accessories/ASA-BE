@@ -1,5 +1,8 @@
 package com.miki.animestylebackend.service;
 
+import com.miki.animestylebackend.dto.UserDto;
+import com.miki.animestylebackend.exception.UserNotFoundException;
+import com.miki.animestylebackend.mapper.UserMapper;
 import com.miki.animestylebackend.repository.UserRepository;
 import com.miki.animestylebackend.dto.ChangePasswordRequest;
 import com.miki.animestylebackend.model.User;
@@ -9,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.Collection;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +21,7 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository repository;
+    private final UserMapper userMapper;
     public void changePassword(ChangePasswordRequest request, Principal connectedUser) {
 
         var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
@@ -34,5 +40,12 @@ public class UserService {
 
         // save the new password
         repository.save(user);
+    }
+    public User getUserByUsername(String username) {
+        return repository.findByEmail(username).orElseThrow(() -> new UserNotFoundException(username));
+    }
+
+    public List<User> getAllUsers() {
+        return repository.findAll();
     }
 }

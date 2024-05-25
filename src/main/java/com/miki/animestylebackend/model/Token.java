@@ -1,6 +1,5 @@
-package com.miki.animestylebackend.token;
+package com.miki.animestylebackend.model;
 
-import com.miki.animestylebackend.model.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,11 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Token {
-
-  @Id
-  @GeneratedValue
-  public Integer id;
+public class Token extends BaseEntity {
 
   @Column(unique = true)
   public String token;
