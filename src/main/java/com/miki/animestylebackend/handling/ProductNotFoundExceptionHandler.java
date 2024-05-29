@@ -18,7 +18,8 @@ public class ProductNotFoundExceptionHandler {
                 HttpStatus.NOT_FOUND,
                 ex.getMessage(),
                 LocalDateTime.now(),
-                "Product not found"
+                "Product not found",
+                false
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }

@@ -3,6 +3,7 @@ package com.miki.animestylebackend.service;
 
 import com.miki.animestylebackend.dto.CreateOrderRequest;
 import com.miki.animestylebackend.dto.CreateOrderItemRequest;
+import com.miki.animestylebackend.dto.OrderData;
 import com.miki.animestylebackend.dto.OrderDto;
 import com.miki.animestylebackend.dto.page.PageData;
 import com.miki.animestylebackend.exception.OrderNotFoundException;
@@ -102,22 +103,22 @@ public class OrderServiceImpl implements OrderService{
 
         log.info("Order created: {}", order);
 
-        return orderMapper.toOrderDto(orderRepository.save(order));
+        return orderMapper.toOrderDto(orderRepository.save(order), "Order created successfully");
     }
 
 
     @Override
     public OrderDto findById(UUID id) {
-        return orderRepository.findById(id).map(orderMapper::toOrderDto)
+        return orderRepository.findById(id).map(order -> orderMapper.toOrderDto(order, "Order found successfully"))
                 .orElseThrow(() -> new OrderNotFoundException("Order with id " + id + " not found"));
     }
 
     @Override
-    public PageData<OrderDto> findOrderByUserId(UUID id, int page, int size) {
+    public PageData<OrderData> findOrderByUserId(UUID id, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<OrderDto> orderDtoPage = orderRepository.findByUserId(id, pageable).map(orderMapper::toOrderDto);
+        Page<OrderData> orderDtoPage = orderRepository.findByUserId(id, pageable).map(orderMapper::toOrderData);
 
-        return new PageData<>(orderDtoPage);
+        return new PageData<>(orderDtoPage, "Orders found successfully");
     }
 
 

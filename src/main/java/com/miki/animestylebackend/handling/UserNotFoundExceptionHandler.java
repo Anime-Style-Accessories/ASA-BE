@@ -18,7 +18,8 @@ public class UserNotFoundExceptionHandler {
                 HttpStatus.NOT_FOUND,
                 ex.getMessage(),
                 LocalDateTime.now(),
-                "User not found"
+                "User not found",
+                false
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }

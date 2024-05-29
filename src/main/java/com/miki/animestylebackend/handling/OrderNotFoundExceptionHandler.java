@@ -18,7 +18,8 @@ public class OrderNotFoundExceptionHandler {
                 HttpStatus.NOT_FOUND,
                 ex.getMessage(),
                 LocalDateTime.now(),
-                "Order not found"
+                "Order not found",
+                false
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }

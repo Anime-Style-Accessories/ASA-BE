@@ -1,6 +1,7 @@
 package com.miki.animestylebackend.service;
 
 import com.miki.animestylebackend.dto.CreateProductRequest;
+import com.miki.animestylebackend.dto.ProductData;
 import com.miki.animestylebackend.dto.ProductDto;
 import com.miki.animestylebackend.dto.UpdateProductRequest;
 import com.miki.animestylebackend.dto.page.PageData;
@@ -40,32 +41,32 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public PageData<ProductDto> findProductsByNameContaining(String name, int page, int size, Sort.Direction sort, String sortBy) {
+    public PageData<ProductData> findProductsByNameContaining(String name, int page, int size, Sort.Direction sort, String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort, sortBy));
-        return new PageData<>(productRepository.findByProductNameContainsIgnoreCase(name, pageable).map(productMapper::toProductDto));
+        return new PageData<>(productRepository.findByProductNameContainsIgnoreCase(name, pageable).map(productMapper::toProductData), "Find products by name successfully");
     }
 
     @Override
-    public PageData<ProductDto> findProductsByCategoryNameContaining(String category, int page, int size, Sort.Direction sort, String sortBy) {
+    public PageData<ProductData> findProductsByCategoryNameContaining(String category, int page, int size, Sort.Direction sort, String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort, sortBy));
-        return new PageData<>(productRepository.findByCategory_NameContainsIgnoreCase(category, pageable).map(productMapper::toProductDto));
+        return new PageData<>(productRepository.findByCategory_NameContainsIgnoreCase(category, pageable).map(productMapper::toProductData), "Find products by category name successfully");
     }
 
     @Override
-    public PageData<ProductDto> getProductsByCategoryAndName(String category, String name, int page, int size, Sort.Direction sort, String sortBy) {
+    public PageData<ProductData> getProductsByCategoryAndName(String category, String name, int page, int size, Sort.Direction sort, String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort, sortBy));
-        Page<ProductDto> products = productRepository
+        Page<ProductData> products = productRepository
                 .findByProductNameContainsAndCategory_NameAllIgnoreCase(name, category, pageable)
-                .map(productMapper::toProductDto);
+                .map(productMapper::toProductData);
 
-        return new PageData<>(products);
+        return new PageData<>(products, "Get products by category and name successfully");
     }
 
     @Override
-    public PageData<ProductDto> getProductsByName(String name, Integer page, Integer size, Sort.Direction sort, String sortBy) {
+    public PageData<ProductData> getProductsByName(String name, Integer page, Integer size, Sort.Direction sort, String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort, sortBy));
-        Page<ProductDto> products = productRepository.findByProductNameContainsIgnoreCase(name, pageable).map(productMapper::toProductDto);
-        return new PageData<>(products);
+        Page<ProductData> products = productRepository.findByProductNameContainsIgnoreCase(name, pageable).map(productMapper::toProductData);
+        return new PageData<>(products, "Get products by name successfully");
     }
 
     @Override

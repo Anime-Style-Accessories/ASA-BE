@@ -19,7 +19,8 @@ public class InvalidUsernameOrPasswordHandler{
                 HttpStatus.BAD_REQUEST,
                 ex.getMessage(),
                 LocalDateTime.now(),
-                "Invalid username or password"
+                "Invalid username or password",
+                false
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }

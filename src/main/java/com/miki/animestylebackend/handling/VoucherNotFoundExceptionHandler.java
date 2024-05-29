@@ -18,7 +18,8 @@ public class VoucherNotFoundExceptionHandler {
                 HttpStatus.NOT_FOUND,
                 ex.getMessage(),
                 LocalDateTime.now(),
-                "Voucher not found"
+                "Voucher not found",
+                false
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }

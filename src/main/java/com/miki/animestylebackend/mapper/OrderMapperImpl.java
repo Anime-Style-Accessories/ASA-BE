@@ -1,26 +1,69 @@
 package com.miki.animestylebackend.mapper;
 
 import com.miki.animestylebackend.dto.OrderDto;
+import com.miki.animestylebackend.dto.OrderData;
+import com.miki.animestylebackend.dto.UserData;
+import com.miki.animestylebackend.dto.UserDto;
 import com.miki.animestylebackend.model.Order;
+import com.miki.animestylebackend.model.User;
 import org.springframework.stereotype.Service;
 
 @Service
 public class OrderMapperImpl implements OrderMapper {
 
     @Override
-    public OrderDto toOrderDto(Order order) {
+    public OrderDto toOrderDto(Order order, String message) {
         if (order == null) {
             return null;
         }
-        OrderDto.UserDto userDto = new OrderDto.UserDto(order.getUser().getUsername(),
-                order.getUser().getFirstname(),
-                order.getUser().getLastname(),
-                order.getUser().getAvatar());
-        return new OrderDto(order.getId(),
-                userDto,
-                order.getOrderDate(),
-                order.getTotalAmount(),
-                order.getPaymentStatus(),
-                order.getShippingStatus());
+
+        OrderData orderData = new OrderData();
+        orderData.setId(order.getId());
+        orderData.setUser(toUserDto(order.getUser()));
+        orderData.setCreatedAt(order.getOrderDate());
+        orderData.setTotalAmount(order.getTotalAmount());
+        orderData.setPaymentStatus(order.getPaymentStatus());
+        orderData.setShippingStatus(order.getShippingStatus());
+
+        OrderDto orderDto = new OrderDto();
+        orderDto.setSuccess(true);
+        orderDto.setStatusCode(200);
+        orderDto.setMessage("Success");
+        orderDto.setData(orderData);
+
+        return orderDto;
+    }
+
+    @Override
+    public OrderData toOrderData(Order order) {
+        if (order == null) {
+            return null;
+        }
+
+        OrderData orderData = new OrderData();
+        orderData.setId(order.getId());
+        orderData.setUser(toUserDto(order.getUser()));
+        orderData.setCreatedAt(order.getOrderDate());
+        orderData.setTotalAmount(order.getTotalAmount());
+        orderData.setPaymentStatus(order.getPaymentStatus());
+        orderData.setShippingStatus(order.getShippingStatus());
+
+        return orderData;
+    }
+
+    private UserData toUserDto(User user) {
+        if (user == null) {
+            return null;
+        }
+        UserData userDto = new UserData();
+        userDto.setId(user.getId());
+        userDto.setEmail(user.getEmail());
+        userDto.setFirstname(user.getFirstname());
+        userDto.setLastname(user.getLastname());
+        userDto.setPhoneNumber(user.getPhone());
+        userDto.setAddress(user.getAddress());
+        userDto.setAvatar(user.getAvatar());
+        userDto.setRole(user.getRole());
+        return userDto;
     }
 }

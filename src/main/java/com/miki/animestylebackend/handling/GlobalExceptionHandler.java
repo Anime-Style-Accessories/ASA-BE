@@ -21,7 +21,8 @@ public class GlobalExceptionHandler {
                 BAD_REQUEST,
                 ex.getMessage(),
                 LocalDateTime.now(),
-                "IllegalArgumentException"
+                "IllegalArgumentException",
+                false
         );
         return new ResponseEntity<>(errorResponse, BAD_REQUEST);
     }
@@ -32,9 +33,34 @@ public class GlobalExceptionHandler {
                 HttpStatus.NOT_FOUND,
                 ex.getMessage(),
                 LocalDateTime.now(),
-                "NoSuchElementException"
+                "NoSuchElementException",
+                false
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException ex, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                ex.getMessage(),
+                LocalDateTime.now(),
+                "RuntimeException",
+                false
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorResponse> handleBadRequestException(BadRequestException ex, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.BAD_REQUEST,
+                ex.getMessage(),
+                LocalDateTime.now(),
+                "BadRequestException",
+                false
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     private ResponseEntity<Object> buildResponseEntity(ErrorResponse apiError) {

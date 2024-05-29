@@ -1,6 +1,7 @@
 package com.miki.animestylebackend.service;
 
 import com.miki.animestylebackend.dto.UpdateProfileRequest;
+import com.miki.animestylebackend.dto.UserData;
 import com.miki.animestylebackend.dto.UserDto;
 import com.miki.animestylebackend.dto.page.PageData;
 import com.miki.animestylebackend.exception.UnAuthorizedException;
@@ -52,30 +53,30 @@ public class UserService {
     }
 
     public User getUserByUsername(String username) {
-        return repository.findByEmail(username).orElseThrow(() -> new UserNotFoundException(username));
+        return repository.findByEmail(username).orElseThrow(() -> new UserNotFoundException("User with email " + username + " not found"));
     }
 
-    public PageData<UserDto> getAllUsers(int page, int size) {
+    public PageData<UserData> getAllUsers(int page, int size) {
 
         Pageable pageable = Pageable.ofSize(size).withPage(page);
 
-        Page<UserDto> userDtoPage = repository.findAll(pageable)
-                .map(userMapper::toUserDto);
+        Page<UserData> userDtoPage = repository.findAll(pageable)
+                .map(userMapper::toUserData);
 
-        return new PageData<>(userDtoPage);
+        return new PageData<>(userDtoPage, "Get all users successfully");
     }
 
-    public PageData<UserDto> getUsersByEmailContaining(String email, int page, int size, User currentUser) {
+    public PageData<UserData> getUsersByEmailContaining(String email, int page, int size, User currentUser) {
         if (!checkIfAdmin(currentUser)) {
             throw new UnAuthorizedException("You do not have permission to do this action");
         }
 
         Pageable pageable = Pageable.ofSize(size).withPage(page);
 
-        Page<UserDto> userDtoPage = repository.findByEmailContaining(email, pageable)
-                .map(userMapper::toUserDto);
+        Page<UserData> userDtoPage = repository.findByEmailContaining(email, pageable)
+                .map(userMapper::toUserData);
 
-        return new PageData<>(userDtoPage);
+        return new PageData<>(userDtoPage, "Users found by email successfully");
     }
 
     private boolean checkIfAdmin(User currentUser) {
@@ -84,7 +85,7 @@ public class UserService {
 
     public UserDto getUserProfile(UUID id, User currentUser) {
         if (id == currentUser.getId() || currentUser.getRole() == Role.ADMIN) {
-            return userMapper.toUserDto(currentUser);
+            return userMapper.toUserDto(currentUser, "Get user profile successfully");
         } else {
             throw new UnAuthorizedException("You do not have permission to do this action");
         }
@@ -99,6 +100,6 @@ public class UserService {
         currentUser.setAvatar(profile.getAvatar());
 
         User savedUser = repository.save(currentUser);
-        return userMapper.toUserDto(savedUser);
+        return userMapper.toUserDto(savedUser, "Update user profile successfully");
     }
 }

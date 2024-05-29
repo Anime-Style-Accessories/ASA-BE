@@ -3,6 +3,7 @@ package com.miki.animestylebackend.service;
 
 import com.miki.animestylebackend.dto.CreateVoucherRequest;
 import com.miki.animestylebackend.dto.UpdateVoucherRequest;
+import com.miki.animestylebackend.dto.VoucherData;
 import com.miki.animestylebackend.dto.VoucherDto;
 import com.miki.animestylebackend.dto.page.PageData;
 import com.miki.animestylebackend.exception.VoucherDuplicateException;
@@ -30,10 +31,10 @@ public class VoucherServiceImpl implements VoucherService{
     }
 
     @Override
-    public PageData<VoucherDto> getVoucherByCodeContaining(String name, int page, int pageSize) {
+    public PageData<VoucherData> getVoucherByCodeContaining(String name, int page, int pageSize) {
         Pageable pageable = PageRequest.of(page, pageSize);
-        Page<VoucherDto> vouchers = voucherRepository.findByCodeContaining(name, pageable).map(voucherMapper::toDto);
-        return new PageData<>(vouchers);
+        Page<VoucherData> vouchers = voucherRepository.findByCodeContaining(name, pageable).map(voucherMapper::toVoucherData);
+        return new PageData<>(vouchers, "Voucher found successfully.");
     }
 
     @Override
@@ -60,17 +61,17 @@ public class VoucherServiceImpl implements VoucherService{
 
     @Override
     public VoucherDto getVoucherById(UUID id) {
-        return voucherRepository.findById(id).map(voucherMapper::toDto)
+        return voucherRepository.findById(id).map(voucher -> voucherMapper.toDto(voucher, "Voucher found successfully."))
                 .orElseThrow(() -> new VoucherNotFoundException("Voucher by id " + id + " was not found.)"));
     }
 
 
 
     @Override
-    public PageData<VoucherDto> getAllVouchers(int page, int pageSize) {
+    public PageData<VoucherData> getAllVouchers(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page, pageSize);
-        Page<VoucherDto> voucherDtoPage = voucherRepository.findAll(pageable).map(voucherMapper::toDto);
-        return new PageData<>(voucherDtoPage);
+        Page<VoucherData> voucherDtoPage = voucherRepository.findAll(pageable).map(voucherMapper::toVoucherData);
+        return new PageData<>(voucherDtoPage, "Get all vouchers successfully.");
     }
 
     @Override
@@ -101,7 +102,7 @@ public class VoucherServiceImpl implements VoucherService{
         voucher.setDescription(updateVoucherRequest.getDescription());
         voucher.setDiscount(updateVoucherRequest.getDiscount());
         voucher.setQuantity(updateVoucherRequest.getQuantity());
-        return voucherMapper.toDto(voucherRepository.save(voucher));
+        return voucherMapper.toDto(voucherRepository.save(voucher), "Voucher updated successfully.");
     }
 
     @Override

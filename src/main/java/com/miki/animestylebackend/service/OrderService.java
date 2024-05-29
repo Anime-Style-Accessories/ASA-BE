@@ -3,6 +3,7 @@ package com.miki.animestylebackend.service;
 
 
 import com.miki.animestylebackend.dto.CreateOrderRequest;
+import com.miki.animestylebackend.dto.OrderData;
 import com.miki.animestylebackend.dto.OrderDto;
 import com.miki.animestylebackend.dto.page.PageData;
 import com.miki.animestylebackend.model.Order;
@@ -21,7 +22,7 @@ public interface OrderService {
 
     OrderDto createOrder(CreateOrderRequest createOrderRequest);
     OrderDto findById(UUID id);
-    PageData<OrderDto> findOrderByUserId(UUID id, int page, int size);
+    PageData<OrderData> findOrderByUserId(UUID id, int page, int size);
 //    Order createOrderFromCartItems(List<Product> cartItems, User user);
     List<Order> getOrdersByUser(String email);
 

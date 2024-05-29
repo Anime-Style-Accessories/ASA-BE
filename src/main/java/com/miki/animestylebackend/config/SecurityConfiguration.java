@@ -34,7 +34,7 @@ public class SecurityConfiguration {
             "/api/v1/product/**",
             "/api/v1/category/**",
             "/api/v1/vouchers/**",
-            "/api/v1/users/**",
+            "/api/v1/orders/**",
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",
@@ -67,7 +67,14 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(WHITE_LIST_URL)
                                 .permitAll()
-                                .requestMatchers("/api/v1/orders/**").hasAnyRole(CUSTOMER.name(), STAFF.name(), ADMIN.name())
+//                                .requestMatchers("/api/v1/users/**").hasAnyRole(CUSTOMER.name(), STAFF.name(), ADMIN.name())
+                                .requestMatchers(GET, "/api/v1/users/me").hasAnyRole(CUSTOMER.name(), STAFF.name(), ADMIN.name())
+                                .requestMatchers(GET, "/api/v1/users/getUserByUsername").hasAnyRole(STAFF.name(), ADMIN.name())
+                                .requestMatchers(GET, "/api/v1/users/getAllUsers").hasAnyRole(STAFF.name(), ADMIN.name())
+                                .requestMatchers(PATCH, "/api/v1/users/**").hasAnyRole(CUSTOMER.name(), STAFF.name(), ADMIN.name())
+                                .requestMatchers(POST, "/api/v1/users").hasAnyRole(CUSTOMER.name(), STAFF.name(), ADMIN.name())
+
+
 
                                 .requestMatchers("/api/v1/staff/**").hasAnyRole(STAFF.name())
                                 .requestMatchers(GET, "/api/v1/staff/**").hasAnyAuthority(STAFF_READ.name())

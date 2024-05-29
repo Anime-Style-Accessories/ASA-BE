@@ -18,7 +18,8 @@ public class VoucherDuplicateExceptionHandler {
                 HttpStatus.CONFLICT,
                 ex.getMessage(),
                 LocalDateTime.now(),
-                "Voucher already exists"
+                "Voucher already exists",
+                false
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }

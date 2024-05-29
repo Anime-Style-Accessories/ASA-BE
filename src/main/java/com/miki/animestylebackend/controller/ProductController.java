@@ -1,6 +1,7 @@
 package com.miki.animestylebackend.controller;
 
 import com.miki.animestylebackend.dto.CreateProductRequest;
+import com.miki.animestylebackend.dto.ProductData;
 import com.miki.animestylebackend.dto.ProductDto;
 import com.miki.animestylebackend.dto.UpdateProductRequest;
 import com.miki.animestylebackend.dto.page.PageData;
@@ -41,11 +42,11 @@ public class ProductController extends BaseController{
 
     @GetMapping("/{id}")
     public ProductDto getProduct(@PathVariable UUID id) {
-        return productMapper.toProductDto(productService.getProductById(id));
+        return productMapper.toProductDto(productService.getProductById(id), "Product found successfully");
     }
 
     @GetMapping("/getProductsBySearch")
-    public ResponseEntity<PageData<ProductDto>> getProductsByName(@RequestParam(value = "name") String name,
+    public ResponseEntity<PageData<ProductData>> getProductsByName(@RequestParam(value = "name") String name,
                                                             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
                                                             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
                                                             @RequestParam(value = "sort", required = false, defaultValue = "ASC") Sort.Direction sort,
@@ -56,22 +57,22 @@ public class ProductController extends BaseController{
     }
 
     @GetMapping("/getProductsByCategoryAndName")
-    public ResponseEntity<PageData<ProductDto>> getProductsByCategoryAndName(@RequestParam(value = "category") String category,
-                                                            @RequestParam(value = "name", required = false) String name,
-                                                            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-                                                            @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
-                                                            @RequestParam(value = "sort", required = false, defaultValue = "ASC") Sort.Direction sort,
-                                                            @RequestParam(value = "sortBy", required = false, defaultValue = "productPrice") String sortBy  ) {
+    public ResponseEntity<PageData<ProductData>> getProductsByCategoryAndName(@RequestParam(value = "category") String category,
+                                                                              @RequestParam(value = "name", required = false) String name,
+                                                                              @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+                                                                              @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
+                                                                              @RequestParam(value = "sort", required = false, defaultValue = "ASC") Sort.Direction sort,
+                                                                              @RequestParam(value = "sortBy", required = false, defaultValue = "productPrice") String sortBy  ) {
         return ResponseEntity.ok(productService.getProductsByCategoryAndName(category, name, page, size, sort, sortBy));
     }
     @PostMapping
     public ProductDto addProduct(@RequestBody CreateProductRequest product) {
-        return productMapper.toProductDto(productService.addProduct(product));
+        return productMapper.toProductDto(productService.addProduct(product), "Product added successfully");
     }
 
     @PutMapping
     public ProductDto updateProduct(@RequestBody UpdateProductRequest product) {
-        return productMapper.toProductDto(productService.updateProduct(product));
+        return productMapper.toProductDto(productService.updateProduct(product), "Product updated successfully");
     }
 
     @DeleteMapping

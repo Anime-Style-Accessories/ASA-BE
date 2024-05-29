@@ -2,6 +2,7 @@ package com.miki.animestylebackend.controller;
 
 import com.miki.animestylebackend.dto.CreateVoucherRequest;
 import com.miki.animestylebackend.dto.UpdateVoucherRequest;
+import com.miki.animestylebackend.dto.VoucherData;
 import com.miki.animestylebackend.dto.VoucherDto;
 import com.miki.animestylebackend.dto.page.PageData;
 import com.miki.animestylebackend.dto.page.SortOrder;
@@ -25,7 +26,7 @@ public class VoucherController extends BaseController{
     private final VoucherService voucherService;
 
     @GetMapping("/getAll")
-    public ResponseEntity<PageData<VoucherDto>> getAllVoucher(@RequestParam(value = "name", required = false) String name,
+    public ResponseEntity<PageData<VoucherData>> getAllVoucher(@RequestParam(value = "name", required = false) String name,
                                                               @RequestParam(value = "page", defaultValue = "0") int page,
                                                               @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
                                                               @RequestParam(value = "sortBy", required = false, defaultValue = "discount") String discount,

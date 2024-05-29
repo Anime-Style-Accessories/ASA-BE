@@ -1,5 +1,6 @@
 package com.miki.animestylebackend.service;
 
+import com.miki.animestylebackend.dto.CategoryData;
 import com.miki.animestylebackend.dto.CategoryDto;
 import com.miki.animestylebackend.dto.CreateCategoryRequest;
 import com.miki.animestylebackend.dto.page.PageData;
@@ -22,10 +23,10 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
     @Override
-    public PageData<CategoryDto> getAllCategories(int page, int size) {
+    public PageData<CategoryData> getAllCategories(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<CategoryDto> categories = categoryRepository.findAll(pageable).map(categoryMapper::toCategoryDto);
-        return new PageData<>(categories);
+        Page<CategoryData> categories = categoryRepository.findAll(pageable).map(categoryMapper::toCategoryData);
+        return new PageData<>(categories, "Categories found successfully");
     }
 
     @Override
@@ -35,19 +36,22 @@ public class CategoryServiceImpl implements CategoryService {
 
 
     @Override
-    public PageData<CategoryDto> getAllCategoriesByNameContaining(String name, int page, int size) {
+    public PageData<CategoryData> getAllCategoriesByNameContaining(String name, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<CategoryDto> categoryDtoPage = categoryRepository.findByNameContaining(name, pageable).map(categoryMapper::toCategoryDto);
-        return new PageData<>(categoryDtoPage);
+        Page<CategoryData> categoryDtoPage = categoryRepository.findByNameContaining(name, pageable).map(categoryMapper::toCategoryData);
+        return new PageData<>(categoryDtoPage, "Categories found successfully");
     }
 
     @Override
-    public Category createCategory(CreateCategoryRequest createCategoryRequest) {
+    public CategoryDto createCategory(CreateCategoryRequest createCategoryRequest) {
+        if (categoryRepository.existsByName(createCategoryRequest.getName())) {
+            throw new RuntimeException("Category with name " + createCategoryRequest.getName() + " already exists");
+        }
         Category category = Category.builder()
                 .name(createCategoryRequest.getName())
                 .description(createCategoryRequest.getDescription())
                 .build();
-        return categoryRepository.save(category);
+        return categoryMapper.toCategoryDto(categoryRepository.save(category), "Category created successfully");
     }
 
     @Override

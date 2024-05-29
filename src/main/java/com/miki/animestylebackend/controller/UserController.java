@@ -2,6 +2,7 @@ package com.miki.animestylebackend.controller;
 
 import com.miki.animestylebackend.dto.ChangePasswordRequest;
 import com.miki.animestylebackend.dto.UpdateProfileRequest;
+import com.miki.animestylebackend.dto.UserData;
 import com.miki.animestylebackend.dto.UserDto;
 import com.miki.animestylebackend.dto.page.PageData;
 import com.miki.animestylebackend.mapper.UserMapper;
@@ -49,7 +50,7 @@ public class UserController extends BaseController{
     @GetMapping("/getUserByUsername")
     @Operation(summary = "Get user by username (getUserByUsername)")
     public ResponseEntity<UserDto> getUserByUsername(@RequestParam("username") String username) {
-        return ResponseEntity.ok(mapper.toUserDto(service.getUserByUsername(username)));
+        return ResponseEntity.ok(mapper.toUserDto(service.getUserByUsername(username), "User found successfully"));
     }
 
     @PostMapping
@@ -66,8 +67,7 @@ public class UserController extends BaseController{
 
     @GetMapping("/getAllUsers")
     @Operation(summary = "Get all users (getAllUsers)")
-//    @PreAuthorize("hasAuthority('admin:read')")
-    public ResponseEntity<PageData<UserDto>> getUsers(
+    public ResponseEntity<PageData<UserData>> getUsers(
             @RequestParam(value = "email", required = false) String email,
             @RequestParam(value = "page", required = false, defaultValue = "0") int page,
             @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
