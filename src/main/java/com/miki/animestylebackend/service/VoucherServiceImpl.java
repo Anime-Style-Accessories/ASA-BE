@@ -3,30 +3,37 @@ package com.miki.animestylebackend.service;
 
 import com.miki.animestylebackend.dto.CreateVoucherRequest;
 import com.miki.animestylebackend.dto.UpdateVoucherRequest;
+import com.miki.animestylebackend.dto.VoucherDto;
+import com.miki.animestylebackend.dto.page.PageData;
 import com.miki.animestylebackend.exception.VoucherDuplicateException;
 import com.miki.animestylebackend.exception.VoucherNotFoundException;
+import com.miki.animestylebackend.mapper.VoucherMapper;
 import com.miki.animestylebackend.model.Voucher;
 import com.miki.animestylebackend.repository.VoucherRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.util.List;
+import java.net.URI;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class VoucherServiceImpl implements VoucherService{
     private final VoucherRepository voucherRepository;
-
+    private final VoucherMapper voucherMapper;
     @Override
     public Voucher getVoucherByCode(String code) {
         return voucherRepository.findByCode(code);
     }
 
     @Override
-    public List<Voucher> getVoucherByCodeContaining(String name) {
-        return voucherRepository.findByCodeContaining(name);
+    public PageData<VoucherDto> getVoucherByCodeContaining(String name, int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<VoucherDto> vouchers = voucherRepository.findByCodeContaining(name, pageable).map(voucherMapper::toDto);
+        return new PageData<>(vouchers);
     }
 
     @Override
@@ -41,24 +48,33 @@ public class VoucherServiceImpl implements VoucherService{
     }
 
     public void useVoucher(Voucher voucher) {
-        voucherRepository.save(voucher);
+        if (voucher.getQuantity() > 0) {
+            voucher.setQuantity(voucher.getQuantity() - 1);
+            voucherRepository.save(voucher);
+        }
+        else {
+            voucher.setUsed(true);
+            throw new VoucherNotFoundException("Voucher by code " + voucher.getCode() + " was not found.");
+        }
     }
 
     @Override
-    public Voucher getVoucherById(UUID id) {
-        return voucherRepository.findById(id)
+    public VoucherDto getVoucherById(UUID id) {
+        return voucherRepository.findById(id).map(voucherMapper::toDto)
                 .orElseThrow(() -> new VoucherNotFoundException("Voucher by id " + id + " was not found.)"));
     }
 
 
 
     @Override
-    public List<Voucher> getAllVouchers() {
-        return voucherRepository.findAll();
+    public PageData<VoucherDto> getAllVouchers(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<VoucherDto> voucherDtoPage = voucherRepository.findAll(pageable).map(voucherMapper::toDto);
+        return new PageData<>(voucherDtoPage);
     }
 
     @Override
-    public Voucher createVoucher(CreateVoucherRequest createVoucherRequest) {
+    public URI createVoucher(CreateVoucherRequest createVoucherRequest) {
         if(voucherRepository.existsByCode(createVoucherRequest.getCode())) {
             throw new VoucherDuplicateException("Voucher with code " + createVoucherRequest.getCode() + " already exists.");
         }
@@ -68,27 +84,30 @@ public class VoucherServiceImpl implements VoucherService{
         voucher.setDescription(createVoucherRequest.getDescription());
         voucher.setDiscount(createVoucherRequest.getDiscount());
         voucher.setQuantity(createVoucherRequest.getQuantity());
-
-        return voucherRepository.save(voucher);
-
+        voucher.setUsed(false);
+        voucherRepository.save(voucher);
+        return URI.create("/api/v1/vouchers/" + voucher.getId());
     }
 
     @Override
-    public Voucher updateVoucher(UpdateVoucherRequest updateVoucherRequest) {
+    public VoucherDto updateVoucher(UUID uuid, UpdateVoucherRequest updateVoucherRequest) {
         if(voucherRepository.existsByCode(updateVoucherRequest.getCode())) {
             throw new VoucherDuplicateException("Voucher with code " + updateVoucherRequest.getCode() + " already exists.");
         }
-        Voucher voucher = voucherRepository.findByCode(updateVoucherRequest.getOldCode());
+        Voucher voucher = voucherRepository.findById(uuid)
+                .orElseThrow(() -> new VoucherNotFoundException("Voucher by id " + uuid + " was not found."));
         voucher.setCode(updateVoucherRequest.getCode());
         voucher.setTitle(updateVoucherRequest.getTitle());
         voucher.setDescription(updateVoucherRequest.getDescription());
         voucher.setDiscount(updateVoucherRequest.getDiscount());
         voucher.setQuantity(updateVoucherRequest.getQuantity());
-        return voucherRepository.save(voucher);
+        return voucherMapper.toDto(voucherRepository.save(voucher));
     }
 
     @Override
-    public void deleteVoucher(Voucher voucher) {
+    public void deleteVoucher(UUID uuid) {
+        Voucher voucher = voucherRepository.findById(uuid)
+                .orElseThrow(() -> new VoucherNotFoundException("Voucher by id " + uuid + " was not found."));
         voucherRepository.delete(voucher);
     }
 }

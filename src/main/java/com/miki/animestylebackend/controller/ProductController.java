@@ -3,18 +3,18 @@ package com.miki.animestylebackend.controller;
 import com.miki.animestylebackend.dto.CreateProductRequest;
 import com.miki.animestylebackend.dto.ProductDto;
 import com.miki.animestylebackend.dto.UpdateProductRequest;
+import com.miki.animestylebackend.dto.page.PageData;
 import com.miki.animestylebackend.mapper.ProductMapper;
-import com.miki.animestylebackend.model.Product;
 import com.miki.animestylebackend.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/product")
@@ -45,26 +45,24 @@ public class ProductController {
     }
 
     @GetMapping("/getProductsBySearch")
-    public List<ProductDto> getProducts(@RequestParam(value = "name", required = false) String text,
-                                        @RequestParam(value = "category", required = false) String category) {
-        List<Product> products;
+    public ResponseEntity<PageData<ProductDto>> getProductsByName(@RequestParam(value = "name", required = false) String name,
+                                                            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+                                                            @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
+                                                            @RequestParam(value = "sort", required = false, defaultValue = "ASC") Sort.Direction sort,
+                                                            @RequestParam(value = "sortBy", required = false, defaultValue = "productPrice") String sortBy  ) {
 
-        if (category != null) {
-            products = productService.findProductsByCategoryNameContaining(category);
-            if (text != null) {
-                products = products.stream()
-                        .filter(product -> product.getProductName().toLowerCase().contains(text.toLowerCase()))
-                        .collect(Collectors.toList());
-            }
-        } else if (text != null) {
-            products = productService.findProductsByCategoryNameContaining(text);
-        } else {
-            products = productService.getAllProducts();
-        }
 
-        return products.stream()
-                .map(productMapper::toProductDto)
-                .collect(Collectors.toList());
+         return ResponseEntity.ok(productService.getProductsByName(name, page, size, sort, sortBy));
+    }
+
+    @GetMapping("/getProductsByCategoryAndName")
+    public ResponseEntity<PageData<ProductDto>> getProductsByCategoryAndName(@RequestParam(value = "category", required = false) String category,
+                                                            @RequestParam(value = "name", required = false) String name,
+                                                            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+                                                            @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
+                                                            @RequestParam(value = "sort", required = false, defaultValue = "ASC") Sort.Direction sort,
+                                                            @RequestParam(value = "sortBy", required = false, defaultValue = "productPrice") String sortBy  ) {
+        return ResponseEntity.ok(productService.getProductsByCategoryAndName(category, name, page, size, sort, sortBy));
     }
     @PostMapping
     public ProductDto addProduct(@RequestBody CreateProductRequest product) {

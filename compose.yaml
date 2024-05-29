@@ -27,6 +27,8 @@ services:
       - "5050:80"
     networks:
       - postgres
+    depends_on:
+      - postgres
     restart: unless-stopped
 
 networks:

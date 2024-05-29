@@ -1,12 +1,16 @@
 package com.miki.animestylebackend.service;
 
 import com.miki.animestylebackend.dto.UserDto;
+import com.miki.animestylebackend.dto.page.PageData;
 import com.miki.animestylebackend.exception.UserNotFoundException;
 import com.miki.animestylebackend.mapper.UserMapper;
 import com.miki.animestylebackend.repository.UserRepository;
 import com.miki.animestylebackend.dto.ChangePasswordRequest;
 import com.miki.animestylebackend.model.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Range;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -45,7 +49,23 @@ public class UserService {
         return repository.findByEmail(username).orElseThrow(() -> new UserNotFoundException(username));
     }
 
-    public List<User> getAllUsers() {
-        return repository.findAll();
+    public PageData<UserDto> getAllUsers(int page, int size) {
+
+        Pageable pageable = Pageable.ofSize(size).withPage(page);
+
+        Page<UserDto> userDtoPage = repository.findAll(pageable)
+                .map(userMapper::toUserDto);
+
+        return new PageData<>(userDtoPage);
+    }
+
+    public PageData<UserDto> getUsersByEmailContaining(String email, int page, int size) {
+
+            Pageable pageable = Pageable.ofSize(size).withPage(page);
+
+            Page<UserDto> userDtoPage = repository.findByEmailContaining(email, pageable)
+                    .map(userMapper::toUserDto);
+
+            return new PageData<>(userDtoPage);
     }
 }

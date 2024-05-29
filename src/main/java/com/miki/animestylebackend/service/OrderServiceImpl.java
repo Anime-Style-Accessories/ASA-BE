@@ -4,7 +4,7 @@ package com.miki.animestylebackend.service;
 import com.miki.animestylebackend.dto.CreateOrderRequest;
 import com.miki.animestylebackend.dto.CreateOrderItemRequest;
 import com.miki.animestylebackend.dto.OrderDto;
-import com.miki.animestylebackend.dto.UserDto;
+import com.miki.animestylebackend.dto.page.PageData;
 import com.miki.animestylebackend.exception.OrderNotFoundException;
 import com.miki.animestylebackend.mapper.OrderMapper;
 import com.miki.animestylebackend.mapper.UserMapper;
@@ -19,6 +19,9 @@ import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -64,7 +67,6 @@ public class OrderServiceImpl implements OrderService{
     @Override
     @Transactional
     public OrderDto createOrder(CreateOrderRequest createOrderRequest) {
-        // Create a new Order object
         Order order = new Order();
         order.setOrderDate(LocalDateTime.now());
         order.setPaymentStatus("PENDING");
@@ -72,12 +74,10 @@ public class OrderServiceImpl implements OrderService{
         order.setShippingAddress(createOrderRequest.getAddress());
 
 
-        // Validate and get the user by email
         User user = userService.getUserByUsername(createOrderRequest.getEmail());
         order.setUser(user);
 
 
-        // Calculate the total amount and create order items
         BigDecimal totalAmount = BigDecimal.ZERO;
         for (CreateOrderItemRequest item : createOrderRequest.getOrderItems()) {
             Product product = productService.getProductById(item.getProductId());
@@ -98,29 +98,26 @@ public class OrderServiceImpl implements OrderService{
             log.info("Adding order item: {}", orderItem);
         }
 
-        // Set the total amount in the order
         order.setTotalAmount(totalAmount);
 
-        // Log the fully constructed order before saving
         log.info("Order created: {}", order);
 
-        // Save the order to the database
         return orderMapper.toOrderDto(orderRepository.save(order));
-
-        // Log the order after it has been saved
-
     }
 
 
     @Override
-    public Order findById(UUID id) {
-        return orderRepository.findById(id)
+    public OrderDto findById(UUID id) {
+        return orderRepository.findById(id).map(orderMapper::toOrderDto)
                 .orElseThrow(() -> new OrderNotFoundException("Order with id " + id + " not found"));
     }
 
     @Override
-    public List<Order> findByUserId(UUID id) {
-        return orderRepository.findByUserId(id);
+    public PageData<OrderDto> findOrderByUserId(UUID id, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<OrderDto> orderDtoPage = orderRepository.findByUserId(id, pageable).map(orderMapper::toOrderDto);
+
+        return new PageData<>(orderDtoPage);
     }
 
 
@@ -191,4 +188,5 @@ public class OrderServiceImpl implements OrderService{
     public void saveOrder(Order order) {
         orderRepository.save(order);
     }
+
 }

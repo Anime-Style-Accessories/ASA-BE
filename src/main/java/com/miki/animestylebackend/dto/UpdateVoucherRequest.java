@@ -7,7 +7,6 @@ import lombok.*;
 @Getter
 @Setter
 public class UpdateVoucherRequest {
-    private String oldCode;
     private String code;
     private String title;
     private int discount;

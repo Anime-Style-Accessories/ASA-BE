@@ -4,6 +4,7 @@ package com.miki.animestylebackend.service;
 
 import com.miki.animestylebackend.dto.CreateOrderRequest;
 import com.miki.animestylebackend.dto.OrderDto;
+import com.miki.animestylebackend.dto.page.PageData;
 import com.miki.animestylebackend.model.Order;
 
 import java.math.BigDecimal;
@@ -19,8 +20,8 @@ public interface OrderService {
     List<Order> findByPaymentStatus(String shippingStatus);
 
     OrderDto createOrder(CreateOrderRequest createOrderRequest);
-    Order findById(UUID id);
-    List<Order> findByUserId(UUID id);
+    OrderDto findById(UUID id);
+    PageData<OrderDto> findOrderByUserId(UUID id, int page, int size);
 //    Order createOrderFromCartItems(List<Product> cartItems, User user);
     List<Order> getOrdersByUser(String email);
 
@@ -33,4 +34,5 @@ public interface OrderService {
     List<Order> getOrdersByUserName(String userName);
 
     void saveOrder(Order order);
+
 }

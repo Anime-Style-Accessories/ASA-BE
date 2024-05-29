@@ -2,6 +2,7 @@ package com.miki.animestylebackend.controller;
 
 import com.miki.animestylebackend.dto.CategoryDto;
 import com.miki.animestylebackend.dto.CreateCategoryRequest;
+import com.miki.animestylebackend.dto.page.PageData;
 import com.miki.animestylebackend.mapper.CategoryMapper;
 import com.miki.animestylebackend.model.Category;
 import com.miki.animestylebackend.service.CategoryService;
@@ -20,16 +21,13 @@ public class CategoryController {
     private final CategoryMapper categoryMapper;
 
     @GetMapping("/all")
-    public List<CategoryDto> getAllCategoriesByNameContaining(@RequestParam(required = false) String name) {
+    public PageData<CategoryDto> getAllCategoriesByNameContaining(@RequestParam(required = false) String name,
+                                                                  @RequestParam(defaultValue = "0") int page,
+                                                                  @RequestParam(defaultValue = "10") int size) {
         if (name != null) {
-            return categoryService.getAllCategoriesByNameContaining(name).stream()
-                    .map(categoryMapper::toCategoryDto)
-                    .collect(Collectors.toList());
+            return categoryService.getAllCategoriesByNameContaining(name, page, size);
         }
-
-        return categoryService.getAllCategories().stream()
-                .map(categoryMapper::toCategoryDto)
-                .collect(Collectors.toList());
+        return categoryService.getAllCategories(page, size);
     }
 
     @PostMapping("/create")

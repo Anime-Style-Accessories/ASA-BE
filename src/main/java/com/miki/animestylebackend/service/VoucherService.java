@@ -3,23 +3,23 @@ package com.miki.animestylebackend.service;
 
 import com.miki.animestylebackend.dto.CreateVoucherRequest;
 import com.miki.animestylebackend.dto.UpdateVoucherRequest;
+import com.miki.animestylebackend.dto.VoucherDto;
+import com.miki.animestylebackend.dto.page.PageData;
 import com.miki.animestylebackend.model.Voucher;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
+import java.net.URI;
 import java.util.UUID;
 
 public interface VoucherService {
     Voucher getVoucherByCode(String code);
-    List<Voucher> getVoucherByCodeContaining(String name);
+    PageData<VoucherDto> getVoucherByCodeContaining(String name, int page, int pageSize);
     Integer getVoucherValueByCode(String voucherCode);
     void useVoucher(Voucher voucher);
-    Voucher getVoucherById(UUID id);
-    List<Voucher> getAllVouchers();
-    Voucher createVoucher(CreateVoucherRequest voucher);
+    VoucherDto getVoucherById(UUID id);
+    PageData<VoucherDto> getAllVouchers(int page, int pageSize);
+    URI createVoucher(CreateVoucherRequest voucher);
 
-    Voucher updateVoucher(UpdateVoucherRequest updateVoucherRequest);
+    VoucherDto updateVoucher(UUID uuid, UpdateVoucherRequest updateVoucherRequest);
 
-    void deleteVoucher(Voucher voucher);
+    void deleteVoucher(UUID uuid);
 }
