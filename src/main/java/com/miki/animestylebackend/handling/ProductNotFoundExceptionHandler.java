@@ -13,12 +13,12 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class ProductNotFoundExceptionHandler {
     @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleProductNotFoundException(ProductNotFoundException ex) {
+    public ResponseEntity<ErrorResponse> handleProductNotFoundException(ProductNotFoundException ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.NOT_FOUND,
                 ex.getMessage(),
                 LocalDateTime.now(),
-                "Product not found",
+                request.getDescription(false),
                 false
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);

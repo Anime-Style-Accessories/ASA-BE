@@ -13,12 +13,12 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class VoucherDuplicateExceptionHandler {
     @ExceptionHandler(VoucherDuplicateException.class)
-    public ResponseEntity<ErrorResponse> handleVoucherNotFoundException(VoucherDuplicateException ex) {
+    public ResponseEntity<ErrorResponse> handleVoucherNotFoundException(VoucherDuplicateException ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.CONFLICT,
                 ex.getMessage(),
                 LocalDateTime.now(),
-                "Voucher already exists",
+                request.getDescription(false),
                 false
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);

@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.NOT_FOUND,
                 ex.getMessage(),
                 LocalDateTime.now(),
-                "NoSuchElementException",
+                request.getDescription(false),
                 false
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 ex.getMessage(),
                 LocalDateTime.now(),
-                "RuntimeException",
+                request.getDescription(false),
                 false
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);

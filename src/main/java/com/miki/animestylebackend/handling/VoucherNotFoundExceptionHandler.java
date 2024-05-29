@@ -13,12 +13,12 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class VoucherNotFoundExceptionHandler {
     @ExceptionHandler(VoucherNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleVoucherNotFoundException(VoucherNotFoundException ex) {
+    public ResponseEntity<ErrorResponse> handleVoucherNotFoundException(VoucherNotFoundException ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.NOT_FOUND,
                 ex.getMessage(),
                 LocalDateTime.now(),
-                "Voucher not found",
+                request.getDescription(false),
                 false
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);

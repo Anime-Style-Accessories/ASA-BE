@@ -11,10 +11,12 @@ import com.miki.animestylebackend.model.Role;
 import com.miki.animestylebackend.repository.UserRepository;
 import com.miki.animestylebackend.dto.ChangePasswordRequest;
 import com.miki.animestylebackend.model.User;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Range;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -31,24 +34,22 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository repository;
     private final UserMapper userMapper;
-
+    private final RedisTemplate<String, UserDto> redisTemplate;
+    private static final String HASH_KEY = "User";
+    private static final long CACHE_TTL = 60;
     public void changePassword(ChangePasswordRequest request, Principal connectedUser) {
 
         var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
 
-        // check if the current password is correct
         if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
             throw new IllegalStateException("Wrong password");
         }
-        // check if the two new passwords are the same
         if (!request.getNewPassword().equals(request.getConfirmationPassword())) {
             throw new IllegalStateException("Password are not the same");
         }
 
-        // update the password
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
 
-        // save the new password
         repository.save(user);
     }
 
@@ -84,22 +85,30 @@ public class UserService {
     }
 
     public UserDto getUserProfile(UUID id, User currentUser) {
+        User user = (User) redisTemplate.opsForHash().get(HASH_KEY, id);
+        if (user != null) {
+            redisTemplate.opsForHash().put(HASH_KEY, id, user);
+            redisTemplate.expire(HASH_KEY, CACHE_TTL, TimeUnit.SECONDS);
+            return userMapper.toUserDto(user, "Get user profile successfully");
+        }
         if (id == currentUser.getId() || currentUser.getRole() == Role.ADMIN) {
             return userMapper.toUserDto(currentUser, "Get user profile successfully");
         } else {
             throw new UnAuthorizedException("You do not have permission to do this action");
         }
     }
-
+    @Transactional
     public UserDto save(UpdateProfileRequest profile, User currentUser) {
         currentUser.setFirstname(profile.getFirstName());
         currentUser.setLastname(profile.getLastName());
-        currentUser.setEmail(profile.getEmail());
+        currentUser.setEmail(currentUser.getEmail());
         currentUser.setPhone(profile.getPhone());
         currentUser.setAddress(profile.getAddress());
         currentUser.setAvatar(profile.getAvatar());
 
         User savedUser = repository.save(currentUser);
+        redisTemplate.opsForHash().put(HASH_KEY, currentUser.getId(), currentUser);
+        redisTemplate.expire(HASH_KEY, CACHE_TTL, TimeUnit.SECONDS);
         return userMapper.toUserDto(savedUser, "Update user profile successfully");
     }
 }
