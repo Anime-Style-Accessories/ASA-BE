@@ -45,7 +45,7 @@ public class ProductController {
     }
 
     @GetMapping("/getProductsBySearch")
-    public ResponseEntity<PageData<ProductDto>> getProductsByName(@RequestParam(value = "name", required = false) String name,
+    public ResponseEntity<PageData<ProductDto>> getProductsByName(@RequestParam(value = "name") String name,
                                                             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
                                                             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
                                                             @RequestParam(value = "sort", required = false, defaultValue = "ASC") Sort.Direction sort,
@@ -56,7 +56,7 @@ public class ProductController {
     }
 
     @GetMapping("/getProductsByCategoryAndName")
-    public ResponseEntity<PageData<ProductDto>> getProductsByCategoryAndName(@RequestParam(value = "category", required = false) String category,
+    public ResponseEntity<PageData<ProductDto>> getProductsByCategoryAndName(@RequestParam(value = "category") String category,
                                                             @RequestParam(value = "name", required = false) String name,
                                                             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
                                                             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,

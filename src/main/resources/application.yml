@@ -23,3 +23,6 @@ application:
         expiration: 604800000 # 7 days
 server:
   port: 8080
+app:
+  password:
+    default: 12345678

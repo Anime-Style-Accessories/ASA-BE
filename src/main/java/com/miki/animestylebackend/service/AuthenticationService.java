@@ -3,6 +3,8 @@ package com.miki.animestylebackend.service;
 import com.miki.animestylebackend.dto.AuthenticationRequest;
 import com.miki.animestylebackend.dto.AuthenticationResponse;
 import com.miki.animestylebackend.dto.RegisterRequest;
+import com.miki.animestylebackend.exception.BadRequestException;
+import com.miki.animestylebackend.model.Role;
 import com.miki.animestylebackend.model.Token;
 import com.miki.animestylebackend.repository.TokenRepository;
 import com.miki.animestylebackend.model.TokenType;
@@ -30,12 +32,15 @@ public class AuthenticationService {
   private final AuthenticationManager authenticationManager;
 
   public AuthenticationResponse register(RegisterRequest request) {
+    if (repository.existsByEmail(request.getEmail())) {
+      throw new BadRequestException("Username is already taken!");
+    }
     var user = User.builder()
         .firstname(request.getFirstname())
         .lastname(request.getLastname())
         .email(request.getEmail())
         .password(passwordEncoder.encode(request.getPassword()))
-        .role(request.getRole())
+        .role(Role.CUSTOMER)
         .build();
     var savedUser = repository.save(user);
     var jwtToken = jwtService.generateToken(user);
