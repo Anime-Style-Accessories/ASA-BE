@@ -1,9 +1,10 @@
-package com.miki.animestylebackend.dto;
+package com.miki.animestylebackend.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public class ErrorResponse {
-    private int status;
+    private HttpStatus status;
     private String message;
     private LocalDateTime timestamp;
     private String details;

@@ -20,7 +20,7 @@ import java.util.UUID;
 @RequestMapping("/api/v1/product")
 @RequiredArgsConstructor
 @Tag(name = "Product")
-public class ProductController {
+public class ProductController extends BaseController{
     private final ProductService productService;
     private final ProductMapper productMapper;
     @Operation(

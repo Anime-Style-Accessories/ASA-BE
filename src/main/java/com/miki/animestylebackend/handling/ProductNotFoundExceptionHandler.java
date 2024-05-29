@@ -1,6 +1,6 @@
 package com.miki.animestylebackend.handling;
 
-import com.miki.animestylebackend.dto.ErrorResponse;
+import com.miki.animestylebackend.exception.ErrorResponse;
 import com.miki.animestylebackend.exception.ProductNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ public class ProductNotFoundExceptionHandler {
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleProductNotFoundException(ProductNotFoundException ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND,
                 ex.getMessage(),
                 LocalDateTime.now(),
                 request.getDescription(false)

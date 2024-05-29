@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/customer")
 @Tag(name = "Customer Controller", description = "This is a customer controller")
-public class CustomerController {
+public class CustomerController extends BaseController {
 
 
     @Operation(

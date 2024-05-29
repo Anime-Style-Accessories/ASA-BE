@@ -1,8 +1,7 @@
 package com.miki.animestylebackend.handling;
 
-import com.miki.animestylebackend.dto.ErrorResponse;
+import com.miki.animestylebackend.exception.ErrorResponse;
 import com.miki.animestylebackend.exception.OrderNotFoundException;
-import com.miki.animestylebackend.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,7 +15,7 @@ public class OrderNotFoundExceptionHandler {
     @ExceptionHandler(OrderNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleOrderNotFoundException(OrderNotFoundException ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND,
                 ex.getMessage(),
                 LocalDateTime.now(),
                 request.getDescription(false)

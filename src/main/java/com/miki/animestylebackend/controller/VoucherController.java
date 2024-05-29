@@ -20,7 +20,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/vouchers")
-public class VoucherController {
+public class VoucherController extends BaseController{
 
     private final VoucherService voucherService;
 

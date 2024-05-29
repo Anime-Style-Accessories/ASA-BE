@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/order_items")
-public class OrderItemController {
+public class OrderItemController extends BaseController{
     private final OrderItemService orderItemService;
     private final OrderService orderService;
     private final ProductService productService;

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,6 +20,9 @@ import org.springframework.stereotype.Component;
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     private final boolean alreadySetup = false;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
     UserService userService;
     @Autowired
@@ -50,7 +54,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
                     User.builder()
                             .email(username)
                             .role(role)
-                            .password(defaultPassword)
+                            .password(passwordEncoder.encode(defaultPassword))
                             .build()
             );
         }

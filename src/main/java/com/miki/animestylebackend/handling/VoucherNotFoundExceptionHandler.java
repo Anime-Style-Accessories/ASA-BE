@@ -1,7 +1,6 @@
 package com.miki.animestylebackend.handling;
 
-import com.miki.animestylebackend.dto.ErrorResponse;
-import com.miki.animestylebackend.exception.OrderNotFoundException;
+import com.miki.animestylebackend.exception.ErrorResponse;
 import com.miki.animestylebackend.exception.VoucherNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +15,7 @@ public class VoucherNotFoundExceptionHandler {
     @ExceptionHandler(VoucherNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleVoucherNotFoundException(VoucherNotFoundException ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND,
                 ex.getMessage(),
                 LocalDateTime.now(),
                 request.getDescription(false)

@@ -1,0 +1,43 @@
+package com.miki.animestylebackend.handling;
+
+import com.miki.animestylebackend.exception.ErrorResponse;
+import org.apache.coyote.BadRequestException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
+
+import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+
+@ControllerAdvice
+public class GlobalExceptionHandler {
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                BAD_REQUEST,
+                ex.getMessage(),
+                LocalDateTime.now(),
+                "IllegalArgumentException"
+        );
+        return new ResponseEntity<>(errorResponse, BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<ErrorResponse> handleNoSuchElementException(NoSuchElementException ex, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.NOT_FOUND,
+                ex.getMessage(),
+                LocalDateTime.now(),
+                "NoSuchElementException"
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    private ResponseEntity<Object> buildResponseEntity(ErrorResponse apiError) {
+        return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
+}

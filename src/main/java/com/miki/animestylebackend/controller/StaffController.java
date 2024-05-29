@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/staff")
 @Tag(name = "Staff")
-public class StaffController {
+public class StaffController extends BaseController{
 
 
     @Operation(
