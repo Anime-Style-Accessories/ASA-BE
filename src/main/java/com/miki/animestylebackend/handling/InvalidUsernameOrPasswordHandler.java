@@ -1,7 +1,8 @@
 package com.miki.animestylebackend.handling;
 
 import com.miki.animestylebackend.exception.ErrorResponse;
-import com.miki.animestylebackend.exception.VoucherDuplicateException;
+import com.miki.animestylebackend.exception.InvalidUsernameOrPassword;
+import com.miki.animestylebackend.exception.OrderNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -11,15 +12,15 @@ import org.springframework.web.context.request.WebRequest;
 import java.time.LocalDateTime;
 
 @ControllerAdvice
-public class VoucherDuplicateExceptionHandler {
-    @ExceptionHandler(VoucherDuplicateException.class)
-    public ResponseEntity<ErrorResponse> handleVoucherNotFoundException(VoucherDuplicateException ex) {
+public class InvalidUsernameOrPasswordHandler{
+    @ExceptionHandler(InvalidUsernameOrPassword.class)
+    public ResponseEntity<ErrorResponse> handleInvalidUsernameOrPasswordException(InvalidUsernameOrPassword ex) {
         ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.CONFLICT,
+                HttpStatus.BAD_REQUEST,
                 ex.getMessage(),
                 LocalDateTime.now(),
-                "Voucher already exists"
+                "Invalid username or password"
         );
-        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }

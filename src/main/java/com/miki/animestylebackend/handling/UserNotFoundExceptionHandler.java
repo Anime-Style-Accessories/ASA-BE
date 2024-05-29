@@ -13,12 +13,12 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class UserNotFoundExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException ex, WebRequest request) {
+    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.NOT_FOUND,
                 ex.getMessage(),
                 LocalDateTime.now(),
-                request.getDescription(false)
+                "User not found"
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }

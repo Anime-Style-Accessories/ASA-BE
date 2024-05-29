@@ -40,7 +40,7 @@ public class AuthenticationController {
       HttpServletRequest request,
       HttpServletResponse response
   ) throws IOException {
-    service.refreshToken(request, response);
+      service.refreshToken(request, response);
   }
 
 
