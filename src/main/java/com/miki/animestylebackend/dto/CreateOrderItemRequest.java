@@ -14,9 +14,6 @@ import java.util.UUID;
 public class CreateOrderItemRequest {
     private UUID productId;
     private int quantity;
-    private BigDecimal pricePerUnit;
     private String size;
     private String color;
-    private int voucher;
-    private int shipping;
 }

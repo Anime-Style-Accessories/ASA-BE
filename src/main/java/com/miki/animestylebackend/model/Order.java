@@ -24,6 +24,7 @@ public class Order extends BaseEntity{
     private String paymentStatus;
     private String shippingStatus;
     private String shippingAddress;
+    private String voucherCode;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;

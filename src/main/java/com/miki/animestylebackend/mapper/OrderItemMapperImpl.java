@@ -13,7 +13,7 @@ public class OrderItemMapperImpl implements OrderItemMapper {
             return null;
         }
         OrderItemDto.ProductDto productDto = new OrderItemDto.ProductDto(orderItem.getProduct().getProductName(), orderItem.getProduct().getProductImage());
-        return new OrderItemDto(orderItem.getId(), productDto, orderItem.getQuantity(), orderItem.getPricePerUnit(), orderItem.getVoucherValue(), orderItem.getShippingValue(), orderItem.getSize(), orderItem.getColor());
+        return new OrderItemDto(orderItem.getId(), productDto, orderItem.getQuantity(), orderItem.getPricePerUnit(), orderItem.getSize(), orderItem.getColor());
     }
 
 //    @Component

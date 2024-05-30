@@ -59,17 +59,6 @@ public class VoucherController extends BaseController{
         }
     }
 
-    @PostMapping("/{code}/use")
-    public ResponseEntity<Void> useVoucher(@PathVariable("code") String code) {
-        Voucher voucher = voucherService.getVoucherByCode(code);
-        if (voucher != null) {
-            voucherService.useVoucher(voucher);
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<VoucherDto> updateVoucher(@PathVariable UUID id, @RequestBody UpdateVoucherRequest updateVoucherRequest) {
         return ResponseEntity.ok(voucherService.updateVoucher(id, updateVoucherRequest));

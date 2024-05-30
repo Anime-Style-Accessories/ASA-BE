@@ -25,8 +25,6 @@ public class OrderItem extends BaseEntity{
     private Product product;
     private Integer quantity;
     private BigDecimal pricePerUnit;
-    private Integer voucherValue;
-    private Integer shippingValue;
     private String size;
     private String color;
 }

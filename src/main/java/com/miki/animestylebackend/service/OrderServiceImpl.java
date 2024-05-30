@@ -7,12 +7,10 @@ import com.miki.animestylebackend.dto.OrderData;
 import com.miki.animestylebackend.dto.OrderDto;
 import com.miki.animestylebackend.dto.page.PageData;
 import com.miki.animestylebackend.exception.OrderNotFoundException;
+import com.miki.animestylebackend.exception.VoucherNotFoundException;
 import com.miki.animestylebackend.mapper.OrderMapper;
 import com.miki.animestylebackend.mapper.UserMapper;
-import com.miki.animestylebackend.model.Order;
-import com.miki.animestylebackend.model.OrderItem;
-import com.miki.animestylebackend.model.Product;
-import com.miki.animestylebackend.model.User;
+import com.miki.animestylebackend.model.*;
 import com.miki.animestylebackend.repository.OrderItemRepository;
 import com.miki.animestylebackend.repository.OrderRepository;
 import jakarta.persistence.EntityManager;
@@ -40,6 +38,7 @@ public class OrderServiceImpl implements OrderService{
     private final UserMapper userMapper;
     private final UserService userService;
     private final OrderMapper orderMapper;
+    private final VoucherService voucherService;
 
     private EntityManager entityManager;
 
@@ -68,16 +67,24 @@ public class OrderServiceImpl implements OrderService{
     @Override
     @Transactional
     public OrderDto createOrder(CreateOrderRequest createOrderRequest) {
+        int discountPercentage = 0;
+        if(!createOrderRequest.getVoucherCode().isEmpty()) {
+            Voucher voucher = voucherService.getVoucherByCode(createOrderRequest.getVoucherCode());
+            if(voucher == null) {
+                throw new VoucherNotFoundException("Voucher not found");
+            }
+            voucherService.useVoucher(voucher);
+            discountPercentage = voucher.getDiscount();
+        }
         Order order = new Order();
         order.setOrderDate(LocalDateTime.now());
         order.setPaymentStatus("PENDING");
         order.setShippingStatus("PENDING");
         order.setShippingAddress(createOrderRequest.getAddress());
-
+        order.setVoucherCode(createOrderRequest.getVoucherCode());
 
         User user = userService.getUserByUsername(createOrderRequest.getEmail());
         order.setUser(user);
-
 
         BigDecimal totalAmount = BigDecimal.ZERO;
         for (CreateOrderItemRequest item : createOrderRequest.getOrderItems()) {
@@ -86,18 +93,18 @@ public class OrderServiceImpl implements OrderService{
                     .product(product)
                     .order(order)
                     .quantity(item.getQuantity())
-                    .pricePerUnit(item.getPricePerUnit())
+                    .pricePerUnit(product.getProductPrice())
                     .size(item.getSize())
                     .color(item.getColor())
-                    .voucherValue(item.getVoucher())
-                    .shippingValue(item.getShipping())
                     .build();
 
-            totalAmount = totalAmount.add(item.getPricePerUnit().multiply(new BigDecimal(item.getQuantity())));
+            totalAmount = totalAmount.add(product.getProductPrice().multiply(new BigDecimal(item.getQuantity())));
             orderItemRepository.save(orderItem);
 
             log.info("Adding order item: {}", orderItem);
         }
+
+        totalAmount = totalAmount.subtract(totalAmount.multiply(new BigDecimal(discountPercentage)).divide(new BigDecimal(100)));
 
         order.setTotalAmount(totalAmount);
 

@@ -14,5 +14,6 @@ public class CreateOrderRequest {
     private BigDecimal totalAmount;
     private String email;
     private String address;
+    private String voucherCode;
     private List<CreateOrderItemRequest> orderItems;
 }

@@ -1,7 +1,5 @@
 package com.miki.animestylebackend.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.miki.animestylebackend.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

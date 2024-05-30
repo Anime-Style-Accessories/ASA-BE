@@ -8,6 +8,7 @@ import com.miki.animestylebackend.dto.VoucherDto;
 import com.miki.animestylebackend.dto.page.PageData;
 import com.miki.animestylebackend.exception.VoucherDuplicateException;
 import com.miki.animestylebackend.exception.VoucherNotFoundException;
+import com.miki.animestylebackend.exception.VoucherOutOfStockException;
 import com.miki.animestylebackend.mapper.VoucherMapper;
 import com.miki.animestylebackend.model.Voucher;
 import com.miki.animestylebackend.repository.VoucherRepository;
@@ -55,7 +56,7 @@ public class VoucherServiceImpl implements VoucherService{
         }
         else {
             voucher.setUsed(true);
-            throw new VoucherNotFoundException("Voucher by code " + voucher.getCode() + " was not found.");
+            throw new VoucherOutOfStockException("Voucher is out of stock.");
         }
     }
 
