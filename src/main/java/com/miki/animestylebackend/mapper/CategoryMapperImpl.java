@@ -23,7 +23,7 @@ public class CategoryMapperImpl implements CategoryMapper{
 
         CategoryDto categoryDto = new CategoryDto();
         categoryDto.setSuccess(true);
-        categoryDto.setStatus(200);
+        categoryDto.setStatus(HttpStatus.OK.value());
         categoryDto.setMessage(message);
         categoryDto.setData(categoryData);
         categoryDto.setTimestamp(LocalDateTime.now());

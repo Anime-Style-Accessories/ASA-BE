@@ -25,6 +25,7 @@ public class ProductMapperImpl implements ProductMapper {
         productData.setCategoryDto(new CategoryData(product.getCategory().getName(), product.getCategory().getDescription()));
         productData.setDescription(product.getProductDescription());
         productData.setPrice(product.getProductPrice());
+        productData.setSize(product.getProductSize());
 
         ProductDto productDto = new ProductDto();
         productDto.setSuccess(true);

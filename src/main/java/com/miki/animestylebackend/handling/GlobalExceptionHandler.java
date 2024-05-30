@@ -16,12 +16,12 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
                 BAD_REQUEST.value(),
                 ex.getMessage(),
                 LocalDateTime.now(),
-                "IllegalArgumentException",
+                request.getDescription(false),
                 false
         );
         return new ResponseEntity<>(errorResponse, BAD_REQUEST);
@@ -57,7 +57,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST.value(),
                 ex.getMessage(),
                 LocalDateTime.now(),
-                "BadRequestException",
+                request.getDescription(false),
                 false
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);

@@ -14,4 +14,5 @@ public class ProductData {
     private CategoryData categoryDto;
     private String description;
     private BigDecimal price;
+    private String size;
 }

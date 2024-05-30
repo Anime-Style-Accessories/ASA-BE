@@ -70,9 +70,9 @@ public class ProductController extends BaseController{
         return productMapper.toProductDto(productService.addProduct(product), "Product added successfully");
     }
 
-    @PutMapping
-    public ProductDto updateProduct(@RequestBody UpdateProductRequest product) {
-        return productMapper.toProductDto(productService.updateProduct(product), "Product updated successfully");
+    @PutMapping("/{id}")
+    public ProductDto updateProduct(@PathVariable UUID id, @RequestBody UpdateProductRequest product) {
+        return productMapper.toProductDto(productService.updateProduct(id, product), "Product updated successfully");
     }
 
     @DeleteMapping

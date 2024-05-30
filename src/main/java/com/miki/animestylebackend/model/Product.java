@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 public class Product extends BaseEntity {
     private String productName;
     private String productDescription;
-    private Integer productSize;
+    private String productSize;
     @Enumerated(EnumType.STRING)
     private ProductColor productColor;
     private BigDecimal productPrice;
