@@ -15,7 +15,7 @@ public class UserNotFoundExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.NOT_FOUND,
+                HttpStatus.NOT_FOUND.value(),
                 ex.getMessage(),
                 LocalDateTime.now(),
                 request.getDescription(false),

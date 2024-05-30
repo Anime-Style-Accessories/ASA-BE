@@ -6,7 +6,10 @@ import com.miki.animestylebackend.dto.UserData;
 import com.miki.animestylebackend.dto.UserDto;
 import com.miki.animestylebackend.model.Order;
 import com.miki.animestylebackend.model.User;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 public class OrderMapperImpl implements OrderMapper {
@@ -27,9 +30,10 @@ public class OrderMapperImpl implements OrderMapper {
 
         OrderDto orderDto = new OrderDto();
         orderDto.setSuccess(true);
-        orderDto.setStatusCode(200);
-        orderDto.setMessage("Success");
+        orderDto.setStatus(200);
+        orderDto.setMessage(message);
         orderDto.setData(orderData);
+        orderDto.setTimestamp(LocalDateTime.now());
 
         return orderDto;
     }

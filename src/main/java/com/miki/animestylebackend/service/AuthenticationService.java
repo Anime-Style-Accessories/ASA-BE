@@ -5,6 +5,7 @@ import com.miki.animestylebackend.dto.AuthenticationResponse;
 import com.miki.animestylebackend.dto.RegisterRequest;
 import com.miki.animestylebackend.exception.BadRequestException;
 import com.miki.animestylebackend.exception.InvalidUsernameOrPassword;
+import com.miki.animestylebackend.mapper.UserMapper;
 import com.miki.animestylebackend.model.Role;
 import com.miki.animestylebackend.model.Token;
 import com.miki.animestylebackend.repository.TokenRepository;
@@ -16,6 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -32,6 +34,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final UserMapper userMapper;
 
     public AuthenticationResponse register(RegisterRequest request) {
         if (repository.existsByEmail(request.getEmail())) {
@@ -51,6 +54,11 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
+                .tokenType("Bearer")
+                .status(HttpStatus.OK)
+                .message("User registered successfully")
+                .user(userMapper.toUserData(user))
+                .success(true)
                 .build();
     }
 
@@ -71,6 +79,11 @@ public class AuthenticationService {
             return AuthenticationResponse.builder()
                     .accessToken(jwtToken)
                     .refreshToken(refreshToken)
+                    .tokenType("Bearer")
+                    .status(HttpStatus.OK)
+                    .message("User authenticated successfully")
+                    .user(userMapper.toUserData(user))
+                    .success(true)
                     .build();
         } catch (AuthenticationException e) {
             throw new InvalidUsernameOrPassword("Incorrect email or password");

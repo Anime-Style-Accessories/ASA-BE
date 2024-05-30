@@ -15,7 +15,7 @@ public class VoucherNotFoundExceptionHandler {
     @ExceptionHandler(VoucherNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleVoucherNotFoundException(VoucherNotFoundException ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.NOT_FOUND,
+                HttpStatus.NOT_FOUND.value(),
                 ex.getMessage(),
                 LocalDateTime.now(),
                 request.getDescription(false),

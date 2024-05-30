@@ -3,7 +3,10 @@ package com.miki.animestylebackend.mapper;
 import com.miki.animestylebackend.dto.UserDto;
 import com.miki.animestylebackend.dto.UserData;
 import com.miki.animestylebackend.model.User;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 public class UserMapperImpl implements UserMapper {
@@ -26,9 +29,10 @@ public class UserMapperImpl implements UserMapper {
 
         UserDto userDto = new UserDto();
         userDto.setSuccess(true);
-        userDto.setStatusCode(200);
+        userDto.setStatus(200);
         userDto.setMessage(message);
         userDto.setData(userData);
+        userDto.setTimestamp(LocalDateTime.now());
 
         return userDto;
     }

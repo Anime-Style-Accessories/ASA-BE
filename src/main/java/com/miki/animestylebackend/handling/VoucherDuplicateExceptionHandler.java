@@ -15,7 +15,7 @@ public class VoucherDuplicateExceptionHandler {
     @ExceptionHandler(VoucherDuplicateException.class)
     public ResponseEntity<ErrorResponse> handleVoucherNotFoundException(VoucherDuplicateException ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.CONFLICT,
+                HttpStatus.CONFLICT.value(),
                 ex.getMessage(),
                 LocalDateTime.now(),
                 request.getDescription(false),

@@ -16,7 +16,7 @@ public class UsernameNotFoundException {
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleInvalidUsernameOrPasswordException(InvalidUsernameOrPassword ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.BAD_REQUEST,
+                HttpStatus.BAD_REQUEST.value(),
                 ex.getMessage(),
                 LocalDateTime.now(),
                 request.getDescription(false),

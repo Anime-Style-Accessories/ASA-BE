@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public class ErrorResponse {
-    private HttpStatus status;
+    private int status;
     private String message;
     private LocalDateTime timestamp;
     private String details;

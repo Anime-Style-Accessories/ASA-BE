@@ -4,7 +4,10 @@ import com.miki.animestylebackend.dto.CategoryData;
 import com.miki.animestylebackend.dto.ProductDto;
 import com.miki.animestylebackend.dto.ProductData;
 import com.miki.animestylebackend.model.Product;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 public class ProductMapperImpl implements ProductMapper {
@@ -25,9 +28,10 @@ public class ProductMapperImpl implements ProductMapper {
 
         ProductDto productDto = new ProductDto();
         productDto.setSuccess(true);
-        productDto.setStatusCode(200);
+        productDto.setStatus(200);
         productDto.setMessage(message);
         productDto.setData(productData);
+        productDto.setTimestamp(LocalDateTime.now());
 
         return productDto;
     }
