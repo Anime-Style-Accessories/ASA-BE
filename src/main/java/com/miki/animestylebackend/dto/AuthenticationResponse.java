@@ -15,15 +15,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthenticationResponse {
-
-    @JsonProperty("access_token")
-    private String accessToken;
-    @JsonProperty("refresh_token")
-    private String refreshToken;
-    private String tokenType;
-    private UserData user;
+    private AuthenticationData data;
     private boolean success;
     private HttpStatus status;
     private String message;
-    private LocalDateTime timestamp = LocalDateTime.now();
+    private LocalDateTime timestamp;
 }

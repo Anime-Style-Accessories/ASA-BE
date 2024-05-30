@@ -1,5 +1,6 @@
 package com.miki.animestylebackend.service;
 
+import com.miki.animestylebackend.dto.AuthenticationData;
 import com.miki.animestylebackend.dto.AuthenticationRequest;
 import com.miki.animestylebackend.dto.AuthenticationResponse;
 import com.miki.animestylebackend.dto.RegisterRequest;
@@ -25,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -51,14 +53,18 @@ public class AuthenticationService {
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         saveUserToken(savedUser, jwtToken);
-        return AuthenticationResponse.builder()
+        AuthenticationData authenticationData = AuthenticationData.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
                 .tokenType("Bearer")
+                .user(userMapper.toUserData(user))
+                .build();
+        return AuthenticationResponse.builder()
+                .data(authenticationData)
                 .status(HttpStatus.OK)
                 .message("User registered successfully")
-                .user(userMapper.toUserData(user))
                 .success(true)
+                .timestamp(LocalDateTime.now())
                 .build();
     }
 
@@ -76,14 +82,18 @@ public class AuthenticationService {
             var refreshToken = jwtService.generateRefreshToken(user);
             revokeAllUserTokens(user);
             saveUserToken(user, jwtToken);
-            return AuthenticationResponse.builder()
+            AuthenticationData authenticationData = AuthenticationData.builder()
                     .accessToken(jwtToken)
                     .refreshToken(refreshToken)
                     .tokenType("Bearer")
+                    .user(userMapper.toUserData(user))
+                    .build();
+            return AuthenticationResponse.builder()
+                    .data(authenticationData)
                     .status(HttpStatus.OK)
                     .message("User authenticated successfully")
-                    .user(userMapper.toUserData(user))
                     .success(true)
+                    .timestamp(LocalDateTime.now())
                     .build();
         } catch (AuthenticationException e) {
             throw new InvalidUsernameOrPassword("Incorrect email or password");
@@ -131,9 +141,18 @@ public class AuthenticationService {
                 var accessToken = jwtService.generateToken(user);
                 revokeAllUserTokens(user);
                 saveUserToken(user, accessToken);
-                var authResponse = AuthenticationResponse.builder()
+                AuthenticationData authenticationData = AuthenticationData.builder()
                         .accessToken(accessToken)
                         .refreshToken(refreshToken)
+                        .tokenType("Bearer")
+                        .user(userMapper.toUserData(user))
+                        .build();
+                var authResponse = AuthenticationResponse.builder()
+                        .data(authenticationData)
+                        .status(HttpStatus.OK)
+                        .message("Token refreshed successfully")
+                        .success(true)
+                        .timestamp(LocalDateTime.now())
                         .build();
                 new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
             }
