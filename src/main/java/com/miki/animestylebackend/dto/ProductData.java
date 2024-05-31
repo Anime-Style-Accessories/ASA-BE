@@ -17,4 +17,5 @@ public class ProductData {
     private BigDecimal price;
     private String size;
     private ProductColor color;
+    private int quantity;
 }
