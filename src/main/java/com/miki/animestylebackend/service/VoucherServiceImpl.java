@@ -103,6 +103,7 @@ public class VoucherServiceImpl implements VoucherService{
         voucher.setDescription(updateVoucherRequest.getDescription());
         voucher.setDiscount(updateVoucherRequest.getDiscount());
         voucher.setQuantity(updateVoucherRequest.getQuantity());
+        voucher.setExpirationDate(updateVoucherRequest.getExpirationDate());
         return voucherMapper.toDto(voucherRepository.save(voucher), "Voucher updated successfully.");
     }
 

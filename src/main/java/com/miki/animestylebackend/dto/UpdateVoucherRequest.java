@@ -2,6 +2,8 @@ package com.miki.animestylebackend.dto;
 
 import lombok.*;
 
+import java.time.LocalDate;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -12,5 +14,5 @@ public class UpdateVoucherRequest {
     private int discount;
     private int quantity;
     private String description;
-
+    private LocalDate expirationDate;
 }
