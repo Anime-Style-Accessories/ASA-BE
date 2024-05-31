@@ -3,11 +3,13 @@ package com.miki.animestylebackend.service;
 import com.miki.animestylebackend.dto.CategoryData;
 import com.miki.animestylebackend.dto.CategoryDto;
 import com.miki.animestylebackend.dto.CreateCategoryRequest;
+import com.miki.animestylebackend.dto.UpdateCategoryRequest;
 import com.miki.animestylebackend.dto.page.PageData;
 import com.miki.animestylebackend.mapper.CategoryMapper;
 import com.miki.animestylebackend.model.Category;
 import com.miki.animestylebackend.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -55,13 +57,22 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category updateCategory(Category category) {
-        return categoryRepository.save(category);
+    public CategoryDto updateCategory(UUID uuid, UpdateCategoryRequest category) {
+        Category categoryToUpdate = categoryRepository.findById(uuid).orElseThrow(() -> new RuntimeException("Category not found"));
+        categoryToUpdate.setName(category.getName());
+        categoryToUpdate.setDescription(category.getDescription());
+        return categoryMapper.toCategoryDto(categoryRepository.save(categoryToUpdate), "Category updated successfully");
     }
 
     @Override
     public void deleteCategory(UUID categoryId) {
         categoryRepository.deleteById(categoryId);
+    }
+
+    @Override
+    public CategoryDto getCategoryById(UUID id) {
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category not found"));
+        return categoryMapper.toCategoryDto(category, "Category found successfully");
     }
 }
 

@@ -3,6 +3,7 @@ package com.miki.animestylebackend.controller;
 import com.miki.animestylebackend.dto.CategoryData;
 import com.miki.animestylebackend.dto.CategoryDto;
 import com.miki.animestylebackend.dto.CreateCategoryRequest;
+import com.miki.animestylebackend.dto.UpdateCategoryRequest;
 import com.miki.animestylebackend.dto.page.PageData;
 import com.miki.animestylebackend.mapper.CategoryMapper;
 import com.miki.animestylebackend.model.Category;
@@ -31,9 +32,19 @@ public class CategoryController extends BaseController{
         return categoryService.getAllCategories(page, size);
     }
 
+    @GetMapping("/get/{id}")
+    public CategoryDto getCategoryById(@PathVariable UUID id) {
+        return categoryService.getCategoryById(id);
+    }
+
     @PostMapping("/create")
     public CategoryDto createCategory(@RequestBody CreateCategoryRequest category) {
         return categoryService.createCategory(category);
+    }
+
+    @PutMapping("/update/{id}")
+    public CategoryDto updateCategory(@PathVariable UUID id, @RequestBody UpdateCategoryRequest category) {
+        return categoryService.updateCategory(id, category);
     }
 
     @DeleteMapping("/delete/{id}")
