@@ -39,7 +39,7 @@ public class OrderServiceImpl implements OrderService{
     private final UserService userService;
     private final OrderMapper orderMapper;
     private final VoucherService voucherService;
-
+    private final EmailService emailService;
     private EntityManager entityManager;
 
     @Override
@@ -110,8 +110,29 @@ public class OrderServiceImpl implements OrderService{
 
         log.info("Order created: {}", order);
 
-        return orderMapper.toOrderDto(orderRepository.save(order), "Order created successfully");
+        OrderDto orderDto = orderMapper.toOrderDto(orderRepository.save(order), "Order created successfully");
+
+        sendCustomerOrderDetailLinkEmail(user.getEmail(), "Order created successfully", order.getId().toString());
+        sendAdminOrderDetailLinkEmail(user.getEmail(), "Order created successfully", order.getId().toString());
+
+        return orderDto;
     }
+
+    private void sendCustomerOrderDetailLinkEmail(String email, String subjectEmail, String order_id) {
+        String text = "Your order has been created successfully, here are you links to track your order:" +
+                "http://localhost:5174/order/" + order_id;
+
+        emailService.sendEmail(email, subjectEmail, text);
+    }
+
+    private void sendAdminOrderDetailLinkEmail(String email, String subjectEmail, String order_id) {
+        String text = "Your order has been created successfully, here are you links to track your order:" +
+                "http://localhost:5173/order/" + order_id;
+
+        emailService.sendEmail(email, subjectEmail, text);
+    }
+
+
 
 
     @Override

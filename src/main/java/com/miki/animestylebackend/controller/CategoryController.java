@@ -1,9 +1,6 @@
 package com.miki.animestylebackend.controller;
 
-import com.miki.animestylebackend.dto.CategoryData;
-import com.miki.animestylebackend.dto.CategoryDto;
-import com.miki.animestylebackend.dto.CreateCategoryRequest;
-import com.miki.animestylebackend.dto.UpdateCategoryRequest;
+import com.miki.animestylebackend.dto.*;
 import com.miki.animestylebackend.dto.page.PageData;
 import com.miki.animestylebackend.mapper.CategoryMapper;
 import com.miki.animestylebackend.model.Category;
@@ -30,6 +27,13 @@ public class CategoryController extends BaseController{
             return categoryService.getAllCategoriesByNameContaining(name, page, size);
         }
         return categoryService.getAllCategories(page, size);
+    }
+
+    @GetMapping("/product-groupby-category")
+    public PageData<GetProductGroupByCategoryData> getProductGroupByCategory(@RequestBody List<UUID> uuids,
+                                                                             @RequestParam(defaultValue = "0") int page,
+                                                                             @RequestParam(defaultValue = "10") int size) {
+        return categoryService.getProductGroupByCategory(uuids, page, size);
     }
 
     @GetMapping("/get/{id}")

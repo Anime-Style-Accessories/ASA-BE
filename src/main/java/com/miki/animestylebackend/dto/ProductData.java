@@ -1,5 +1,6 @@
 package com.miki.animestylebackend.dto;
 
+import com.miki.animestylebackend.model.ProductColor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,4 +16,5 @@ public class ProductData {
     private String description;
     private BigDecimal price;
     private String size;
+    private ProductColor color;
 }

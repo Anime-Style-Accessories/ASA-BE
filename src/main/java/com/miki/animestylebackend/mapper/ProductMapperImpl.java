@@ -26,6 +26,7 @@ public class ProductMapperImpl implements ProductMapper {
         productData.setDescription(product.getProductDescription());
         productData.setPrice(product.getProductPrice());
         productData.setSize(product.getProductSize());
+        productData.setColor(product.getProductColor());
 
         ProductDto productDto = new ProductDto();
         productDto.setSuccess(true);

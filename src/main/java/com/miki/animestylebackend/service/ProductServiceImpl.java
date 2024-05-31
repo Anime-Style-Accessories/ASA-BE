@@ -1,9 +1,6 @@
 package com.miki.animestylebackend.service;
 
-import com.miki.animestylebackend.dto.CreateProductRequest;
-import com.miki.animestylebackend.dto.ProductData;
-import com.miki.animestylebackend.dto.ProductDto;
-import com.miki.animestylebackend.dto.UpdateProductRequest;
+import com.miki.animestylebackend.dto.*;
 import com.miki.animestylebackend.dto.page.PageData;
 import com.miki.animestylebackend.exception.ProductNotFoundException;
 import com.miki.animestylebackend.mapper.ProductMapper;
@@ -16,6 +13,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -70,6 +68,37 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public PageData<GetProductGroupByCategoryData> getCategoryAndProductByCategory(Integer page, Integer size, Sort.Direction sort, String sortBy) {
+        List<GetProductGroupByCategoryData> getProductGroupByCategoryData = new LinkedList<>();
+        List<CategoryData> categories = categoryService.getAllCategories();
+        for(CategoryData category: categories){
+            List<ProductData> products = productRepository.findByCategory_Name(category.getName())
+                    .stream()
+                    .map(productMapper::toProductData)
+                    .collect(Collectors.toList());
+
+            getProductGroupByCategoryData.add(new GetProductGroupByCategoryData(category, products));
+        }
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort, sortBy));
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), getProductGroupByCategoryData.size());
+        Page<GetProductGroupByCategoryData> productDataPage = new PageImpl<>(getProductGroupByCategoryData.subList(start, end), pageable, getProductGroupByCategoryData.size());
+        return new PageData<>(productDataPage, "Get category and product by category successfully");
+    }
+
+    @Override
+    public PageData<ProductData> getProductsByListId(List<UUID> uuids, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<ProductData> products = productRepository.findAllById(uuids).stream()
+                .map(productMapper::toProductData)
+                .collect(Collectors.toList());
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), products.size());
+        Page<ProductData> productDataPage = new PageImpl<>(products.subList(start, end), pageable, products.size());
+        return new PageData<>(productDataPage, "Get products by list id successfully");
+    }
+
+    @Override
     public Product addProduct(CreateProductRequest createProductRequest) {
         Category category = categoryService.getCategoryByName(createProductRequest.getCategory());
         Product product = Product.builder()
@@ -79,6 +108,8 @@ public class ProductServiceImpl implements ProductService {
                 .productPrice(createProductRequest.getPrice())
                 .productQuantity(createProductRequest.getQuantity())
                 .category(category)
+                .productImage(createProductRequest.getImage())
+                .productSize(createProductRequest.getSize())
                 .build();
         log.info("Product added: {}", product);
         return productRepository.save(product);

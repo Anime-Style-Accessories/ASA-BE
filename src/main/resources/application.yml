@@ -14,6 +14,27 @@ spring:
     database: postgresql
   application:
     name: anime-style-staff
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: 21522348@gm.uit.edu.vn
+    password: ncchoiprghnaxxnt
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: Iv1.6fb2d7b8ba5826ab
+            client-secret: 6434895e61d6694fa8c092bb3650a2eab7ee6b0b
+            scope:
+              - email
+              - profile
   data:
     redis:
       host: localhost
@@ -30,3 +51,7 @@ server:
 app:
   password:
     default: 12345678
+management:
+  health:
+    mail:
+      enabled: off

@@ -1,9 +1,6 @@
 package com.miki.animestylebackend.service;
 
-import com.miki.animestylebackend.dto.CreateProductRequest;
-import com.miki.animestylebackend.dto.ProductData;
-import com.miki.animestylebackend.dto.ProductDto;
-import com.miki.animestylebackend.dto.UpdateProductRequest;
+import com.miki.animestylebackend.dto.*;
 import com.miki.animestylebackend.dto.page.PageData;
 import com.miki.animestylebackend.model.Product;
 import org.springframework.data.domain.Page;
@@ -28,6 +25,10 @@ public interface ProductService {
     PageData<ProductData> getProductsByCategoryAndName(String category, String name, int page, int size, Sort.Direction sort, String sortBy);
 
     PageData<ProductData> getProductsByName(String text, Integer page, Integer size, Sort.Direction sort, String sortBy);
+
+    PageData<ProductData> getProductsByListId(List<UUID> uuids, int page, int size);
+
+    PageData<GetProductGroupByCategoryData> getCategoryAndProductByCategory(Integer page, Integer size, Sort.Direction sort, String sortBy);
 
 //    Page<ProductDto> findProductsBySearch(String text, String category, int page, int size);
 }

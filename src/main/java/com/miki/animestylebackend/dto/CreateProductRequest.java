@@ -19,4 +19,6 @@ public class CreateProductRequest {
     private ProductColor color;
     private BigDecimal price;
     private int quantity;
+    private String image;
+    private String size;
 }

@@ -1,9 +1,6 @@
 package com.miki.animestylebackend.service;
 
-import com.miki.animestylebackend.dto.CategoryData;
-import com.miki.animestylebackend.dto.CategoryDto;
-import com.miki.animestylebackend.dto.CreateCategoryRequest;
-import com.miki.animestylebackend.dto.UpdateCategoryRequest;
+import com.miki.animestylebackend.dto.*;
 import com.miki.animestylebackend.dto.page.PageData;
 import com.miki.animestylebackend.mapper.CategoryMapper;
 import com.miki.animestylebackend.model.Category;
@@ -17,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,11 +22,19 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
+
     @Override
     public PageData<CategoryData> getAllCategories(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<CategoryData> categories = categoryRepository.findAll(pageable).map(categoryMapper::toCategoryData);
         return new PageData<>(categories, "Categories found successfully");
+    }
+
+    @Override
+    public List<CategoryData> getAllCategories() {
+        return categoryRepository.findAll()
+                .stream()
+                .map(categoryMapper::toCategoryData).collect(Collectors.toList());
     }
 
     @Override
@@ -73,6 +79,24 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDto getCategoryById(UUID id) {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category not found"));
         return categoryMapper.toCategoryDto(category, "Category found successfully");
+    }
+
+    @Override
+    public PageData<CategoryDto> getAllProductGroupByCategory(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CategoryDto> categoryDtoPage = categoryRepository.findAll(pageable)
+                .map(categoryProduct -> categoryMapper.toCategoryDto(categoryProduct, "Category found successfully"));
+        return new PageData<>(categoryDtoPage, "Categories found successfully");
+    }
+
+    @Override
+    public PageData<GetProductGroupByCategoryData> getProductGroupByCategory(List<UUID> uuids, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<GetProductGroupByCategoryData> categoryDtoPage;
+        for (UUID uuid : uuids) {
+            Category category = categoryRepository.findById(uuid).orElseThrow(() -> new RuntimeException("Category not found"));
+        }
+        return null;
     }
 }
 

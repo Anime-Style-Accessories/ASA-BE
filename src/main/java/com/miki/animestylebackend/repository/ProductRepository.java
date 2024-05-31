@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,5 +16,9 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     Page<Product> findByCategory_NameContainsIgnoreCase(String name, Pageable pageable);
 
+//    Page<Product> findAllById(UUID id, Pageable pageable);
+
     Page<Product> findByProductNameContainsAndCategory_NameAllIgnoreCase(String productName, String name, Pageable pageable);
+
+    List<Product> findByCategory_Name(String name);
 }

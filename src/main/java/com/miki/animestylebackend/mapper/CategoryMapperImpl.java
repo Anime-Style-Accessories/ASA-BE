@@ -2,11 +2,15 @@ package com.miki.animestylebackend.mapper;
 
 import com.miki.animestylebackend.dto.CategoryDto;
 import com.miki.animestylebackend.dto.CategoryData;
+import com.miki.animestylebackend.dto.GetProductGroupByCategoryData;
+import com.miki.animestylebackend.dto.ProductData;
 import com.miki.animestylebackend.model.Category;
+import com.miki.animestylebackend.model.Product;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class CategoryMapperImpl implements CategoryMapper{
@@ -43,5 +47,18 @@ public class CategoryMapperImpl implements CategoryMapper{
         categoryData.setDescription(category.getDescription());
 
         return categoryData;
+    }
+
+    @Override
+    public GetProductGroupByCategoryData toGetProductGroupByCategoryData(Category category, List<ProductData> productData) {
+        if (category == null) {
+            return null;
+        }
+
+        GetProductGroupByCategoryData getProductGroupByCategoryData = new GetProductGroupByCategoryData();
+        getProductGroupByCategoryData.setCategoryData(toCategoryData(category));
+        getProductGroupByCategoryData.setProducts(productData);
+
+        return getProductGroupByCategoryData;
     }
 }
