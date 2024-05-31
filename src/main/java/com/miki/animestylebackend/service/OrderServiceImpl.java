@@ -113,7 +113,7 @@ public class OrderServiceImpl implements OrderService{
         OrderDto orderDto = orderMapper.toOrderDto(orderRepository.save(order), "Order created successfully");
 
         sendCustomerOrderDetailLinkEmail(user.getEmail(), "Order created successfully", order.getId().toString());
-        sendAdminOrderDetailLinkEmail(user.getEmail(), "Order created successfully", order.getId().toString());
+        sendAdminOrderDetailLinkEmail("radiomfmdak@gmail.com", "Order created successfully", order.getId().toString());
 
         return orderDto;
     }
