@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 @Builder
 public class Product extends BaseEntity {
     private String productName;
+    @Column(length = 1000)
     private String productDescription;
     private String productSize;
     @Enumerated(EnumType.STRING)
