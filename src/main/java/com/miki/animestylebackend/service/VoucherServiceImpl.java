@@ -93,9 +93,9 @@ public class VoucherServiceImpl implements VoucherService{
 
     @Override
     public VoucherDto updateVoucher(UUID uuid, UpdateVoucherRequest updateVoucherRequest) {
-        if(voucherRepository.existsByCode(updateVoucherRequest.getCode())) {
-            throw new VoucherDuplicateException("Voucher with code " + updateVoucherRequest.getCode() + " already exists.");
-        }
+//        if(voucherRepository.existsByCode(updateVoucherRequest.getCode())) {
+//            throw new VoucherDuplicateException("Voucher with code " + updateVoucherRequest.getCode() + " already exists.");
+//        }
         Voucher voucher = voucherRepository.findById(uuid)
                 .orElseThrow(() -> new VoucherNotFoundException("Voucher by id " + uuid + " was not found."));
         voucher.setCode(updateVoucherRequest.getCode());
