@@ -43,7 +43,7 @@ public class ProductController extends BaseController{
         return productMapper.toProductDto(productService.getProductById(id), "Product found successfully");
     }
 
-    @GetMapping("/getProductByListId")
+    @@PostMapping("/getProductByListId")
     public PageData<ProductData> getProductsByListId(@RequestBody List<UUID> uuids,
                                                      @RequestParam(defaultValue = "0") int page,
                                                      @RequestParam(defaultValue = "10") int size) {

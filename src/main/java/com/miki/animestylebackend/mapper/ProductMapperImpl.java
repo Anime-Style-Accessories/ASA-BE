@@ -22,7 +22,7 @@ public class ProductMapperImpl implements ProductMapper {
         productData.setId(product.getId());
         productData.setName(product.getProductName());
         productData.setImage(product.getProductImage());
-        productData.setCategoryDto(new CategoryData(product.getCategory().getName(), product.getCategory().getDescription()));
+        productData.setCategoryDto(new CategoryData(product.getCategory().getId(), product.getCategory().getName(), product.getCategory().getDescription()));
         productData.setDescription(product.getProductDescription());
         productData.setPrice(product.getProductPrice());
         productData.setSize(product.getProductSize());
@@ -49,7 +49,7 @@ public class ProductMapperImpl implements ProductMapper {
         productData.setId(product.getId());
         productData.setName(product.getProductName());
         productData.setImage(product.getProductImage());
-        productData.setCategoryDto(new CategoryData(product.getCategory().getName(), product.getCategory().getDescription()));
+        productData.setCategoryDto(new CategoryData(product.getCategory().getId(), product.getCategory().getName(), product.getCategory().getDescription()));
         productData.setDescription(product.getProductDescription());
         productData.setPrice(product.getProductPrice());
         productData.setSize(product.getProductSize());
