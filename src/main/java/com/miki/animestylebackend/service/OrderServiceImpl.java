@@ -83,14 +83,17 @@ public class OrderServiceImpl implements OrderService{
         }
         Order order = new Order();
         order.setOrderDate(LocalDateTime.now());
-        order.setPaymentStatus("PENDING");
         order.setShippingStatus("PENDING");
         order.setShippingAddress(createOrderRequest.getAddress());
         order.setVoucherCode(createOrderRequest.getVoucherCode());
         order.setUserEmail(createOrderRequest.getEmail());
         order.setPaymentMethod(createOrderRequest.getPaymentMethod());
-//        User user = userService.getUserByUsername(createOrderRequest.getEmail());
-//        order.setUser(user);
+
+        if(createOrderRequest.getPaymentMethod().equals(PaymentMethod.VNPAY)) {
+            order.setPaymentStatus("PAID");
+        } else {
+            order.setPaymentStatus("PENDING");
+        }
 
         BigDecimal totalAmount = BigDecimal.ZERO;
         for (CreateOrderItemRequest item : createOrderRequest.getOrderItems()) {

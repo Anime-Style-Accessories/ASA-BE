@@ -27,6 +27,7 @@ public class OrderMapperImpl implements OrderMapper {
         orderData.setTotalAmount(order.getTotalAmount());
         orderData.setPaymentStatus(order.getPaymentStatus());
         orderData.setShippingStatus(order.getShippingStatus());
+        orderData.setAddress(order.getShippingAddress());
 
         OrderDto orderDto = new OrderDto();
         orderDto.setSuccess(true);
@@ -53,6 +54,7 @@ public class OrderMapperImpl implements OrderMapper {
         orderData.setShippingStatus(order.getShippingStatus());
         orderData.setPaymentStatus(order.getPaymentStatus());
         orderData.setPaymentMethod(order.getPaymentMethod());
+        orderData.setAddress(order.getShippingAddress());
 
         return orderData;
     }

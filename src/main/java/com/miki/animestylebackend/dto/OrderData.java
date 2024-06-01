@@ -17,4 +17,5 @@ public class OrderData {
     private String paymentStatus;
     private String shippingStatus;
     private PaymentMethod paymentMethod;
+    private String address;
 }
