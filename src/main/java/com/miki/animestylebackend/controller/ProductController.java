@@ -39,23 +39,23 @@ public class ProductController extends BaseController{
     )
 
     @GetMapping("/{id}")
-    public ProductDto getProduct(@PathVariable UUID id) {
-        return productMapper.toProductDto(productService.getProductById(id), "Product found successfully");
+    public ResponseEntity<ProductDto> getProduct(@PathVariable UUID id) {
+        return ResponseEntity.ok(productMapper.toProductDto(productService.getProductById(id), "Product found successfully"));
     }
 
     @PostMapping("/getProductByListId")
-    public PageData<ProductData> getProductsByListId(@RequestBody List<UUID> uuids,
+    public ResponseEntity<PageData<ProductData>> getProductsByListId(@RequestBody List<UUID> uuids,
                                                      @RequestParam(defaultValue = "0") int page,
                                                      @RequestParam(defaultValue = "10") int size) {
-        return productService.getProductsByListId(uuids, page, size);
+        return ResponseEntity.ok(productService.getProductsByListId(uuids, page, size));
     }
 
     @GetMapping("/getCategoryAndProductByCategory")
-    public PageData<GetProductGroupByCategoryData> getCategoryAndProductByCategory(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+    public ResponseEntity<PageData<GetProductGroupByCategoryData>> getCategoryAndProductByCategory(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
                                                                                    @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
                                                                                    @RequestParam(value = "sort", required = false, defaultValue = "ASC") Sort.Direction sort,
                                                                                    @RequestParam(value = "sortBy", required = false, defaultValue = "productPrice") String sortBy) {
-        return productService.getCategoryAndProductByCategory(page, size, sort, sortBy);
+        return ResponseEntity.ok(productService.getCategoryAndProductByCategory(page, size, sort, sortBy));
     }
 
     @GetMapping("/getProductsBySearch")

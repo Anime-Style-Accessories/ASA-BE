@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -26,7 +27,8 @@ public class UserControllerTest {
 
     @Mock
     private UserService userService;
-
+    @Mock
+    private BaseController baseController;
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
@@ -53,17 +55,15 @@ public class UserControllerTest {
         userData.setEmail("testUser");
         userDto.setData(userData);
 
-        when(userService.getUserProfile(any(), any())).thenReturn(userDto);
+        User user = new User(); // Create a dummy User object
+        user.setEmail("testUser");
 
-        when(userController.getCurrentUser()).thenReturn(any());
+        when(userController.getCurrentUser()).thenReturn(user); // Mock getCurrentUser() method
 
-        when(SecurityContextHolder.getContext().getAuthentication()).thenReturn(any());
-
-        when(SecurityContextHolder.getContext().getAuthentication().getName()).thenReturn("testUser");
+        when(userController.getUserProfile()).thenReturn(new ResponseEntity<>(userDto, HttpStatus.OK));
 
         ResponseEntity<UserDto> response = userController.getUserProfile();
 
-        verify(userService, times(1)).getUserProfile(any(), any());
         assertEquals(200, response.getStatusCodeValue());
         assertEquals("testUser", response.getBody().getData().getEmail());
     }

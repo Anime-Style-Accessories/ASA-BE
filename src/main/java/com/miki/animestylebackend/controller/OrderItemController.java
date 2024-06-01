@@ -1,10 +1,15 @@
 package com.miki.animestylebackend.controller;
 
+import com.miki.animestylebackend.dto.OrderItemData;
+import com.miki.animestylebackend.dto.page.PageData;
 import com.miki.animestylebackend.service.OrderItemService;
 import com.miki.animestylebackend.service.OrderService;
 import com.miki.animestylebackend.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,5 +48,18 @@ public class OrderItemController extends BaseController{
 //            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi khi tạo đơn hàng.");
 //        }
 //        return null;
+//    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PageData<OrderItemData>> getOrderItemByOrderId(@PathVariable UUID id,
+                                                                        @RequestParam(defaultValue = "0") int page,
+                                                                        @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(orderItemService.getOrderItemByOrderId(id, page, size));
+    }
+
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<?> deleteOrderItemById(@PathVariable Long id) {
+//        orderItemService.deleteOrderItemById(id);
+//        return ResponseEntity.ok("OrderItem deleted successfully");
 //    }
 }
