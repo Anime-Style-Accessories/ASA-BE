@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Range;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,21 @@ public class UserService {
     private final RedisTemplate<String, UserDto> redisTemplate;
     private static final String HASH_KEY = "User";
     private static final long CACHE_TTL = 60;
+    private final RedisTemplate<String, Integer> redisTemplateInteger;
+    private static final int MAX_REQUESTS = 1;
+    private static final int EXPIRE_TIME = 10;
+
+    public void limitAccess(String username) {
+        ValueOperations<String, Integer> operations = redisTemplateInteger.opsForValue();
+        Integer currentCount = operations.get(username);
+        if (currentCount == null) {
+            operations.set(username, 1, EXPIRE_TIME, TimeUnit.SECONDS);
+        } else if (currentCount < MAX_REQUESTS) {
+            operations.increment(username);
+        } else {
+            throw new IllegalStateException("Exceeded maximum requests");
+        }
+    }
     public void changePassword(ChangePasswordRequest request, Principal connectedUser) {
 
         var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
@@ -85,6 +101,7 @@ public class UserService {
     }
 
     public UserDto getUserProfile(UUID id, User currentUser) {
+        limitAccess(currentUser.getUsername());
         User user = (User) redisTemplate.opsForHash().get(HASH_KEY, id);
         if (user != null) {
             redisTemplate.opsForHash().put(HASH_KEY, id, user);

@@ -59,11 +59,11 @@ public class SecurityConfiguration {
                         req.requestMatchers(WHITE_LIST_URL)
                                 .permitAll()
 //                                .requestMatchers("/api/v1/users/**").hasAnyRole(CUSTOMER.name(), STAFF.name(), ADMIN.name())
-                                .requestMatchers(GET, "/api/v1/users/me").hasAnyRole(CUSTOMER.name(), STAFF.name(), ADMIN.name())
-                                .requestMatchers(GET, "/api/v1/users/getUserByUsername").hasAnyRole(STAFF.name(), ADMIN.name())
-                                .requestMatchers(GET, "/api/v1/users/getAllUsers").hasAnyRole(STAFF.name(), ADMIN.name())
-                                .requestMatchers(PATCH, "/api/v1/users/**").hasAnyRole(CUSTOMER.name(), STAFF.name(), ADMIN.name())
-                                .requestMatchers(POST, "/api/v1/users").hasAnyRole(CUSTOMER.name(), STAFF.name(), ADMIN.name())
+                                .requestMatchers(GET, "/api/v1/users/me").hasAnyRole(CUSTOMER.name(), ADMIN.name())
+                                .requestMatchers(GET, "/api/v1/users/getUserByUsername").hasAnyRole(ADMIN.name())
+                                .requestMatchers(GET, "/api/v1/users/getAllUsers").hasAnyRole(ADMIN.name())
+                                .requestMatchers(PATCH, "/api/v1/users/**").hasAnyRole(CUSTOMER.name(), ADMIN.name())
+                                .requestMatchers(POST, "/api/v1/users").hasAnyRole(CUSTOMER.name(), ADMIN.name())
 
 
 
