@@ -1,8 +1,12 @@
 package com.miki.animestylebackend.dto;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Getter
+@Setter
 public class UpdateProfileRequest {
     private String firstName;
     private String lastName;

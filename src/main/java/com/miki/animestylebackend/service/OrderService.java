@@ -5,6 +5,7 @@ package com.miki.animestylebackend.service;
 import com.miki.animestylebackend.dto.CreateOrderRequest;
 import com.miki.animestylebackend.dto.OrderData;
 import com.miki.animestylebackend.dto.OrderDto;
+import com.miki.animestylebackend.dto.UpdateStatusRequest;
 import com.miki.animestylebackend.dto.page.PageData;
 import com.miki.animestylebackend.model.Order;
 
@@ -38,4 +39,5 @@ public interface OrderService {
 
     void saveOrder(Order order);
 
+    OrderDto updateOrderStatus(UUID uuid, UpdateStatusRequest updateStatusRequest);
 }

@@ -1,10 +1,7 @@
 package com.miki.animestylebackend.service;
 
 
-import com.miki.animestylebackend.dto.CreateOrderRequest;
-import com.miki.animestylebackend.dto.CreateOrderItemRequest;
-import com.miki.animestylebackend.dto.OrderData;
-import com.miki.animestylebackend.dto.OrderDto;
+import com.miki.animestylebackend.dto.*;
 import com.miki.animestylebackend.dto.page.PageData;
 import com.miki.animestylebackend.exception.OrderNotFoundException;
 import com.miki.animestylebackend.exception.VoucherNotFoundException;
@@ -91,6 +88,7 @@ public class OrderServiceImpl implements OrderService{
         order.setShippingAddress(createOrderRequest.getAddress());
         order.setVoucherCode(createOrderRequest.getVoucherCode());
         order.setUserEmail(createOrderRequest.getEmail());
+        order.setPaymentMethod(createOrderRequest.getPaymentMethod());
 //        User user = userService.getUserByUsername(createOrderRequest.getEmail());
 //        order.setUser(user);
 
@@ -234,6 +232,17 @@ public class OrderServiceImpl implements OrderService{
     @Override
     public void saveOrder(Order order) {
         orderRepository.save(order);
+    }
+
+    @Override
+    public OrderDto updateOrderStatus(UUID uuid, UpdateStatusRequest updateStatusRequest) {
+        Order order = orderRepository.findById(uuid)
+                .orElseThrow(() -> new OrderNotFoundException("Order with id " + uuid + " not found"));
+
+        order.setShippingStatus(updateStatusRequest.getDeliveryStatus());
+        order.setPaymentStatus(updateStatusRequest.getPaymentStatus());
+
+        return orderMapper.toOrderDto(orderRepository.save(order), "Order status updated successfully");
     }
 
 }

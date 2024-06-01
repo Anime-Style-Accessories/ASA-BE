@@ -3,6 +3,7 @@ package com.miki.animestylebackend.controller;
 import com.miki.animestylebackend.dto.CreateOrderRequest;
 import com.miki.animestylebackend.dto.OrderData;
 import com.miki.animestylebackend.dto.OrderDto;
+import com.miki.animestylebackend.dto.UpdateStatusRequest;
 import com.miki.animestylebackend.dto.page.PageData;
 import com.miki.animestylebackend.model.Order;
 import com.miki.animestylebackend.service.OrderService;
@@ -28,6 +29,12 @@ public class OrderController extends BaseController{
     @GetMapping("/getOrderById/{orderId}")
     public ResponseEntity<OrderDto> getOrderById(@PathVariable UUID orderId) {
         return ResponseEntity.ok(orderService.findById(orderId));
+    }
+
+    @PostMapping("/updateOrderStatus/{orderId}")
+    public ResponseEntity<OrderDto> updateOrderStatus(@PathVariable UUID orderId,
+                                                      @RequestBody UpdateStatusRequest updateStatusRequest) {
+        return ResponseEntity.ok(orderService.updateOrderStatus(orderId, updateStatusRequest));
     }
 
     @GetMapping("/getOrders")
