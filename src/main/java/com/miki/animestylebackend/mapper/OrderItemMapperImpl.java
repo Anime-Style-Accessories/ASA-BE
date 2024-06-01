@@ -5,6 +5,7 @@ import com.miki.animestylebackend.dto.OrderItemDto;
 import com.miki.animestylebackend.model.OrderItem;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Component
@@ -42,14 +43,12 @@ public class OrderItemMapperImpl implements OrderItemMapper {
         orderItemData.setId(orderItem.getId());
         orderItemData.setProductData(orderItem.getProduct());
         orderItemData.setQuantity(orderItem.getQuantity());
-        orderItemData.setPricePerUnit(orderItem.getPricePerUnit());
+        orderItemData.setPricePerUnit(orderItem.getPricePerUnit().multiply(new BigDecimal(orderItem.getQuantity())));
         orderItemData.setSize(orderItem.getSize());
         orderItemData.setColor(orderItem.getColor());
 
         return orderItemData;
     }
-
-    @Override
 
 //    @Component
 //    public class OrderItemMapper {

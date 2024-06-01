@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -22,9 +23,9 @@ import static com.miki.animestylebackend.config.Config.*;
 
 
 @Controller
-@RequestMapping("/api/payment")
+@RequestMapping("/api/v1/payment")
 public class PaymentController {
-    @GetMapping("/create_payment")
+    @PostMapping("/create_payment")
     public ResponseEntity<?> createPayment(HttpServletRequest req, @RequestParam("amount") Long amount) throws UnsupportedEncodingException {
         String orderType = "other";
 //        long amount = Integer.parseInt(req.getParameter("amount")) * 100;
