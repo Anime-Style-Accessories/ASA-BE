@@ -25,6 +25,17 @@ public class OrderController extends BaseController{
         return ResponseEntity.ok(orderService.createOrder(createOrderRequest));
     }
 
+    @GetMapping("/getOrderById/{orderId}")
+    public ResponseEntity<OrderDto> getOrderById(@PathVariable UUID orderId) {
+        return ResponseEntity.ok(orderService.findById(orderId));
+    }
+
+    @GetMapping("/getOrders")
+    public ResponseEntity<PageData<OrderData>> getOrders(@RequestParam(defaultValue = "0") int page,
+                                                         @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(orderService.getALl(page, size));
+    }
+
     @GetMapping("/countOrders")
     public ResponseEntity<Integer> countProducts() {
         return ResponseEntity.ok(orderService.viewAll().size());

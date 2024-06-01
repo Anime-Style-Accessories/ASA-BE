@@ -1,5 +1,6 @@
 package com.miki.animestylebackend.dto;
 
+import com.miki.animestylebackend.model.PaymentMethod;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -15,5 +16,6 @@ public class CreateOrderRequest {
     private String email;
     private String address;
     private String voucherCode;
+    private PaymentMethod paymentMethod;
     private List<CreateOrderItemRequest> orderItems;
 }

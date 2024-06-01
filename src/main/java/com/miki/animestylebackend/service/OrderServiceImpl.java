@@ -50,6 +50,14 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
+    public PageData<OrderData> getALl(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<OrderData> orderDtoPage = orderRepository.findAll(pageable).map(orderMapper::toOrderData);
+
+        return new PageData<>(orderDtoPage, "Orders found successfully");
+    }
+
+    @Override
     public List<Order> viewAll() {
         return orderRepository.findAllByOrderByOrderDateDesc();
     }

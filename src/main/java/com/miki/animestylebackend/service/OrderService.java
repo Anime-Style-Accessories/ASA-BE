@@ -14,6 +14,7 @@ import java.util.UUID;
 
 public interface OrderService {
     List<Order> findAllOrdersSortedByDateDescending();
+    PageData<OrderData> getALl(int page, int size);
 
     List<Order> viewAll();
 
