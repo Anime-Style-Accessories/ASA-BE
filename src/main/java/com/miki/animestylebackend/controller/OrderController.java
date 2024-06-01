@@ -37,6 +37,12 @@ public class OrderController extends BaseController{
         return ResponseEntity.ok(orderService.updateOrderStatus(orderId, updateStatusRequest));
     }
 
+    @DeleteMapping("/deleteOrder/{orderId}")
+    public ResponseEntity<String> deleteOrder(@PathVariable UUID orderId) {
+        orderService.deleteOrder(orderId);
+        return ResponseEntity.ok("Order deleted successfully");
+    }
+
     @GetMapping("/getOrders")
     public ResponseEntity<PageData<OrderData>> getOrders(@RequestParam(defaultValue = "0") int page,
                                                          @RequestParam(defaultValue = "10") int size) {

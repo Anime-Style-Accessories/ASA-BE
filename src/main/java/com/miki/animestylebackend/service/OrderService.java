@@ -40,4 +40,6 @@ public interface OrderService {
     void saveOrder(Order order);
 
     OrderDto updateOrderStatus(UUID uuid, UpdateStatusRequest updateStatusRequest);
+
+    void deleteOrder(UUID orderId);
 }

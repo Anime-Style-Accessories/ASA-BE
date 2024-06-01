@@ -245,4 +245,9 @@ public class OrderServiceImpl implements OrderService{
         return orderMapper.toOrderDto(orderRepository.save(order), "Order status updated successfully");
     }
 
+    @Override
+    public void deleteOrder(UUID orderId) {
+        orderRepository.deleteById(orderId);
+    }
+
 }
