@@ -1,5 +1,6 @@
 package com.miki.animestylebackend.dto;
 
+import com.miki.animestylebackend.model.PaymentMethod;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,4 +16,5 @@ public class OrderData {
     private BigDecimal totalAmount;
     private String paymentStatus;
     private String shippingStatus;
+    private PaymentMethod paymentMethod;
 }

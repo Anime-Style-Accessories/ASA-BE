@@ -51,23 +51,9 @@ public class OrderMapperImpl implements OrderMapper {
         orderData.setTotalAmount(order.getTotalAmount());
         orderData.setPaymentStatus(order.getPaymentStatus());
         orderData.setShippingStatus(order.getShippingStatus());
+        orderData.setPaymentStatus(order.getPaymentStatus());
+        orderData.setPaymentMethod(order.getPaymentMethod());
 
         return orderData;
-    }
-
-    private UserData toUserDto(User user) {
-        if (user == null) {
-            return null;
-        }
-        UserData userDto = new UserData();
-        userDto.setId(user.getId());
-        userDto.setEmail(user.getEmail());
-        userDto.setFirstname(user.getFirstname());
-        userDto.setLastname(user.getLastname());
-        userDto.setPhoneNumber(user.getPhone());
-        userDto.setAddress(user.getAddress());
-        userDto.setAvatar(user.getAvatar());
-        userDto.setRole(user.getRole());
-        return userDto;
     }
 }
