@@ -82,9 +82,9 @@ public class OrderServiceImpl implements OrderService{
         order.setShippingStatus("PENDING");
         order.setShippingAddress(createOrderRequest.getAddress());
         order.setVoucherCode(createOrderRequest.getVoucherCode());
-
-        User user = userService.getUserByUsername(createOrderRequest.getEmail());
-        order.setUser(user);
+        order.setUserEmail(createOrderRequest.getEmail());
+//        User user = userService.getUserByUsername(createOrderRequest.getEmail());
+//        order.setUser(user);
 
         BigDecimal totalAmount = BigDecimal.ZERO;
         for (CreateOrderItemRequest item : createOrderRequest.getOrderItems()) {
@@ -112,7 +112,7 @@ public class OrderServiceImpl implements OrderService{
 
         OrderDto orderDto = orderMapper.toOrderDto(orderRepository.save(order), "Order created successfully");
 
-        sendCustomerOrderDetailLinkEmail(user.getEmail(), "Order created successfully", order.getId().toString());
+        sendCustomerOrderDetailLinkEmail(createOrderRequest.getEmail(), "Order created successfully", order.getId().toString());
         sendAdminOrderDetailLinkEmail("radiomfmdak@gmail.com", "Order created successfully", order.getId().toString());
 
         return orderDto;
@@ -141,13 +141,23 @@ public class OrderServiceImpl implements OrderService{
                 .orElseThrow(() -> new OrderNotFoundException("Order with id " + id + " not found"));
     }
 
+//    @Override
+//    public PageData<OrderData> findOrderByUserId(UUID id, int page, int size) {
+//        Pageable pageable = PageRequest.of(page, size);
+//        Page<OrderData> orderDtoPage = orderRepository.findByUserId(id, pageable).map(orderMapper::toOrderData);
+//
+//        return new PageData<>(orderDtoPage, "Orders found successfully");
+//    }
+
     @Override
-    public PageData<OrderData> findOrderByUserId(UUID id, int page, int size) {
+    public PageData<OrderData> findOrderByUserEmail(String email, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<OrderData> orderDtoPage = orderRepository.findByUserId(id, pageable).map(orderMapper::toOrderData);
+        Page<OrderData> orderDtoPage = orderRepository.findByUserEmailIgnoreCase(email, pageable).map(orderMapper::toOrderData);
 
         return new PageData<>(orderDtoPage, "Orders found successfully");
     }
+
+
 
 
     @Override
@@ -202,11 +212,11 @@ public class OrderServiceImpl implements OrderService{
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    @Override
-    public List<Order> getOrdersContainingText(String text) {
-        User user = userService.getUserByUsername(text);
-        return orderRepository.findByUser(user);
-    }
+//    @Override
+//    public List<Order> getOrdersContainingText(String text) {
+//        User user = userService.getUserByUsername(text);
+//        return orderRepository.findByUser(user);
+//    }
 
     @Override
     public List<Order> getOrdersByUserName(String userName) {

@@ -15,11 +15,14 @@ import java.util.UUID;
 public interface OrderRepository extends JpaRepository<Order, UUID> {
 
     List<Order> findByUserEmailContaining(String email);
-    List<Order> findByUser(User user);
+
+//    List<Order> findByUser(User user);
     Optional<Order> findById(UUID id);
-    Page<Order> findByUserId(UUID id, Pageable pageable);
+//    Page<Order> findByUserId(UUID id, Pageable pageable);
     List<Order> findByShippingStatus(String shippingStatus);
     List<Order> findByPaymentStatus(String paymentStatus);
     List<Order> findAllByOrderByOrderDateDesc();
+
+    Page<Order> findByUserEmailIgnoreCase(String userEmail, Pageable pageable);
 }
 

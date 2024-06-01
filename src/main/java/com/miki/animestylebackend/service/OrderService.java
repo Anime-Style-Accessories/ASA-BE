@@ -22,7 +22,8 @@ public interface OrderService {
 
     OrderDto createOrder(CreateOrderRequest createOrderRequest);
     OrderDto findById(UUID id);
-    PageData<OrderData> findOrderByUserId(UUID id, int page, int size);
+//    PageData<OrderData> findOrderByUserId(UUID id, int page, int size);
+    PageData<OrderData> findOrderByUserEmail(String email, int page, int size);
 //    Order createOrderFromCartItems(List<Product> cartItems, User user);
     List<Order> getOrdersByUser(String email);
 
@@ -30,7 +31,7 @@ public interface OrderService {
 
     BigDecimal calculateTotalRevenue();
 
-    List<Order> getOrdersContainingText(String text);
+//    List<Order> getOrdersContainingText(String text);
 
     List<Order> getOrdersByUserName(String userName);
 

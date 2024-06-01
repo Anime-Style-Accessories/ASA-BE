@@ -10,7 +10,7 @@ import java.util.UUID;
 @Setter
 public class OrderData {
     private UUID id;
-    private UserData user;
+    private String user;
     private LocalDateTime createdAt;
     private BigDecimal totalAmount;
     private String paymentStatus;

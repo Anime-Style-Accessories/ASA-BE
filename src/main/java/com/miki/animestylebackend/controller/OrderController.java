@@ -30,11 +30,11 @@ public class OrderController extends BaseController{
         return ResponseEntity.ok(orderService.viewAll().size());
     }
 
-    @GetMapping("/getOrdersByUserId/{userId}")
-    public ResponseEntity<PageData<OrderData>> findOrdersByUserId(@PathVariable UUID userId,
-                                                                  @RequestParam(value = "page", required = false, defaultValue = "0") int page,
-                                                                  @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
-        return ResponseEntity.ok(orderService.findOrderByUserId(userId, page, size));
+    @GetMapping("/getOrdersByUserId/{userEmail}")
+    public ResponseEntity<PageData<OrderData>> getOrdersByUserId(@PathVariable String userEmail,
+                                                                @RequestParam(defaultValue = "0") int page,
+                                                                @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(orderService.findOrderByUserEmail(userEmail, page, size));
     }
 
 //    @GetMapping("/getOrders")

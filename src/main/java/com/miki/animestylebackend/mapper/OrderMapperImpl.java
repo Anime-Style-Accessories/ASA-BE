@@ -22,7 +22,7 @@ public class OrderMapperImpl implements OrderMapper {
 
         OrderData orderData = new OrderData();
         orderData.setId(order.getId());
-        orderData.setUser(toUserDto(order.getUser()));
+        orderData.setUser(order.getUserEmail());
         orderData.setCreatedAt(order.getOrderDate());
         orderData.setTotalAmount(order.getTotalAmount());
         orderData.setPaymentStatus(order.getPaymentStatus());
@@ -46,7 +46,7 @@ public class OrderMapperImpl implements OrderMapper {
 
         OrderData orderData = new OrderData();
         orderData.setId(order.getId());
-        orderData.setUser(toUserDto(order.getUser()));
+        orderData.setUser(order.getUserEmail());
         orderData.setCreatedAt(order.getOrderDate());
         orderData.setTotalAmount(order.getTotalAmount());
         orderData.setPaymentStatus(order.getPaymentStatus());
