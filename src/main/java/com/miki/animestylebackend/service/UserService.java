@@ -35,8 +35,8 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository repository;
     private final UserMapper userMapper;
-    private final RedisTemplate<String, UserDto> redisTemplate;
     private static final String HASH_KEY = "User";
+    private final RedisTemplate<String, UserDto> redisTemplate;
     private static final long CACHE_TTL = 60;
     private final RedisTemplate<String, Integer> redisTemplateInteger;
     private static final int MAX_REQUESTS = 1;

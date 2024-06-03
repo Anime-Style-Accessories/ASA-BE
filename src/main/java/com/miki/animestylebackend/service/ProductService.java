@@ -30,5 +30,7 @@ public interface ProductService {
 
     PageData<GetProductGroupByCategoryData> getCategoryAndProductByCategory(Integer page, Integer size, Sort.Direction sort, String sortBy);
 
+    PageData<ProductData> getSimilarProductByCategory(UUID productId, Integer page, Integer size, Sort.Direction sort, String sortBy);
+
 //    Page<ProductDto> findProductsBySearch(String text, String category, int page, int size);
 }

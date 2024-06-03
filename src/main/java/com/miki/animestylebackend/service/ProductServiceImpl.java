@@ -87,6 +87,22 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public PageData<ProductData> getSimilarProductByCategory(UUID productId, Integer page, Integer size, Sort.Direction sort, String sortBy) {
+        Product product = getProductById(productId);
+        List<ProductData> products = productRepository.findByCategory_Name(product.getCategory().getName())
+                .stream()
+                .map(productMapper::toProductData)
+                .collect(Collectors.toList());
+        products.removeIf(p -> p.getId().equals(productId));
+        products.sort(Comparator.comparing(ProductData::getPrice));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort, sortBy));
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), products.size());
+        Page<ProductData> productDataPage = new PageImpl<>(products.subList(start, end), pageable, products.size());
+        return new PageData<>(productDataPage, "Get similar product by category successfully");
+    }
+
+    @Override
     public PageData<ProductData> getProductsByListId(List<UUID> uuids, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         List<ProductData> products = productRepository.findAllById(uuids).stream()

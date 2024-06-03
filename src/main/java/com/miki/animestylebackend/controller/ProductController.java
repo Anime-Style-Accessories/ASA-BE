@@ -78,6 +78,16 @@ public class ProductController extends BaseController{
                                                                               @RequestParam(value = "sortBy", required = false, defaultValue = "productPrice") String sortBy  ) {
         return ResponseEntity.ok(productService.getProductsByCategoryAndName(category, name, page, size, sort, sortBy));
     }
+
+    @GetMapping("/getSimilarProduct")
+    public ResponseEntity<PageData<ProductData>> getSimilarProductByCategory(@RequestParam(value = "productId") UUID productId,
+                                                                             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+                                                                             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
+                                                                             @RequestParam(value = "sort", required = false, defaultValue = "ASC") Sort.Direction sort,
+                                                                             @RequestParam(value = "sortBy", required = false, defaultValue = "productPrice") String sortBy  ) {
+        return ResponseEntity.ok(productService.getSimilarProductByCategory(productId, page, size, sort, sortBy));
+    }
+
     @PostMapping
     public ResponseEntity<ProductDto> addProduct(@RequestBody CreateProductRequest product) {
         return ResponseEntity.ok(productMapper.toProductDto(productService.addProduct(product), "Product added successfully"));
