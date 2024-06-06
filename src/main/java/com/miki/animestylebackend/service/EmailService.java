@@ -3,6 +3,7 @@ package com.miki.animestylebackend.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,5 +18,21 @@ public class EmailService {
         message.setSubject(subject);
         message.setText(text);
         mailSender.send(message);
+    }
+
+    @Async
+    public void sendCustomerOrderDetailLinkEmail(String email, String subjectEmail, String order_id) {
+        String text = "Your order has been created successfully, here are you links to track your order:" +
+                "http://localhost:5174/order/" + order_id;
+
+        sendEmail(email, subjectEmail, text);
+    }
+
+    @Async
+    public void sendAdminOrderDetailLinkEmail(String email, String subjectEmail, String order_id) {
+        String text = "Your order has been created successfully, here are you links to track your order:" +
+                "http://localhost:5173/order/" + order_id;
+
+        sendEmail(email, subjectEmail, text);
     }
 }
