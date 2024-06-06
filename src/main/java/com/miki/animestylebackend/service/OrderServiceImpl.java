@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -121,25 +122,12 @@ public class OrderServiceImpl implements OrderService{
 
         OrderDto orderDto = orderMapper.toOrderDto(orderRepository.save(order), "Order created successfully");
 
-        sendCustomerOrderDetailLinkEmail(createOrderRequest.getEmail(), "Order created successfully", order.getId().toString());
-        sendAdminOrderDetailLinkEmail("radiomfmdak@gmail.com", "Order created successfully", order.getId().toString());
+        emailService.sendCustomerOrderDetailLinkEmail(createOrderRequest.getEmail(), "Order created successfully", order.getId().toString());
+        emailService.sendAdminOrderDetailLinkEmail("radiomfmdak@gmail.com", "Order created successfully", order.getId().toString());
 
         return orderDto;
     }
 
-    private void sendCustomerOrderDetailLinkEmail(String email, String subjectEmail, String order_id) {
-        String text = "Your order has been created successfully, here are you links to track your order:" +
-                "http://localhost:5174/order/" + order_id;
-
-        emailService.sendEmail(email, subjectEmail, text);
-    }
-
-    private void sendAdminOrderDetailLinkEmail(String email, String subjectEmail, String order_id) {
-        String text = "Your order has been created successfully, here are you links to track your order:" +
-                "http://localhost:5173/order/" + order_id;
-
-        emailService.sendEmail(email, subjectEmail, text);
-    }
 
 
 

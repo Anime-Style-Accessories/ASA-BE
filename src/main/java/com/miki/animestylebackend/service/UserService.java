@@ -101,7 +101,7 @@ public class UserService {
     }
 
     public UserDto getUserProfile(UUID id, User currentUser) {
-        limitAccess(currentUser.getUsername());
+//        limitAccess(currentUser.getUsername());
         User user = (User) redisTemplate.opsForHash().get(HASH_KEY, id);
         if (user != null) {
             redisTemplate.opsForHash().put(HASH_KEY, id, user);
