@@ -31,6 +31,7 @@ public class UserControllerTest {
     private BaseController baseController;
     @BeforeEach
     public void setup() {
+
         MockitoAnnotations.openMocks(this);
     }
 

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -40,6 +41,18 @@ public class UserController extends BaseController{
         service.changePassword(request, connectedUser);
         return ResponseEntity.ok().build();
     }
+
+    @PatchMapping("/updateUser/{id}")
+    @Operation(summary = "Update user (updateUser)")
+    public ResponseEntity<UserDto> updateUser(
+            @PathVariable("id") UUID id,
+            @Valid @RequestBody UpdateProfileRequest profile
+    ) {
+        return ResponseEntity.ok(
+                service.updateUser(id, profile)
+        );
+    }
+
     @GetMapping("/me")
     @Operation(summary = "Get current user (getCurrentUser)")
     public ResponseEntity<UserDto> getUserProfile() {
@@ -52,6 +65,8 @@ public class UserController extends BaseController{
     public ResponseEntity<UserDto> getUserByUsername(@RequestParam("username") String username) {
         return ResponseEntity.ok(mapper.toUserDto(service.getUserByUsername(username), "User found successfully"));
     }
+
+
 
     @PostMapping
     @Transactional

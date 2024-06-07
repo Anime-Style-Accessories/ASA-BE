@@ -128,4 +128,19 @@ public class UserService {
         redisTemplate.expire(HASH_KEY, CACHE_TTL, TimeUnit.SECONDS);
         return userMapper.toUserDto(savedUser, "Update user profile successfully");
     }
+
+    public UserDto updateUser(UUID id, UpdateProfileRequest profile) {
+        User user = repository.findById(id).orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
+
+        user.setFirstname(profile.getFirstName());
+        user.setLastname(profile.getLastName());
+        user.setPhone(profile.getPhone());
+        user.setAddress(profile.getAddress());
+        user.setAvatar(profile.getAvatar());
+
+        User savedUser = repository.save(user);
+        redisTemplate.opsForHash().put(HASH_KEY, id, user);
+        redisTemplate.expire(HASH_KEY, CACHE_TTL, TimeUnit.SECONDS);
+        return userMapper.toUserDto(savedUser, "Update user profile successfully");
+    }
 }
