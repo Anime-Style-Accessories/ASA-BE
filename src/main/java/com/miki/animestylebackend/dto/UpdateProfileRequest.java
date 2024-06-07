@@ -1,5 +1,6 @@
 package com.miki.animestylebackend.dto;
 
+import com.miki.animestylebackend.model.Role;
 import lombok.*;
 
 @AllArgsConstructor
@@ -13,4 +14,5 @@ public class UpdateProfileRequest {
     private String phone;
     private String address;
     private String avatar;
+    private Role role;
 }

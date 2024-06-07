@@ -18,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +42,22 @@ public class OrderServiceImpl implements OrderService{
     private final VoucherService voucherService;
     private final EmailService emailService;
     private EntityManager entityManager;
-
+    private static final long CACHE_TTL = 60;
+    private final RedisTemplate<String, Integer> redisTemplateInteger;
+    private static final int MAX_REQUESTS = 1;
+    private static final int EXPIRE_TIME = 10;
+    // limit access function
+    public void limitAccess(String username) {
+        ValueOperations<String, Integer> operations = redisTemplateInteger.opsForValue();
+        Integer currentCount = operations.get(username);
+        if (currentCount == null) {
+            operations.set(username, 1, EXPIRE_TIME, TimeUnit.SECONDS);
+        } else if (currentCount < MAX_REQUESTS) {
+            operations.increment(username);
+        } else {
+            throw new IllegalStateException("Exceeded maximum requests");
+        }
+    }
     @Override
     public List<Order> findAllOrdersSortedByDateDescending() {
         String jpql = "SELECT o FROM Order o ORDER BY o.orderDate DESC";
@@ -73,6 +91,8 @@ public class OrderServiceImpl implements OrderService{
     @Override
     @Transactional
     public OrderDto createOrder(CreateOrderRequest createOrderRequest) {
+        // limit access
+        limitAccess(createOrderRequest.getEmail());
         int discountPercentage = 0;
         if(!createOrderRequest.getVoucherCode().isEmpty()) {
             Voucher voucher = voucherService.getVoucherByCode(createOrderRequest.getVoucherCode());
@@ -226,13 +246,19 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
+    @Transactional
     public OrderDto updateOrderStatus(UUID uuid, UpdateStatusRequest updateStatusRequest) {
         Order order = orderRepository.findById(uuid)
                 .orElseThrow(() -> new OrderNotFoundException("Order with id " + uuid + " not found"));
 
         order.setShippingStatus(updateStatusRequest.getDeliveryStatus());
         order.setPaymentStatus(updateStatusRequest.getPaymentStatus());
-
+//
+        emailService.sendEmail(order.getUserEmail(),
+                "Order status updated successfully", "Your order status has been updated to "
+                + updateStatusRequest.getDeliveryStatus()
+                + " and payment status to "
+                + updateStatusRequest.getPaymentStatus());
         return orderMapper.toOrderDto(orderRepository.save(order), "Order status updated successfully");
     }
 
