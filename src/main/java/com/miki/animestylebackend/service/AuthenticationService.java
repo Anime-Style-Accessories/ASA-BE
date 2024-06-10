@@ -7,11 +7,8 @@ import com.miki.animestylebackend.dto.RegisterRequest;
 import com.miki.animestylebackend.exception.BadRequestException;
 import com.miki.animestylebackend.exception.InvalidUsernameOrPassword;
 import com.miki.animestylebackend.mapper.UserMapper;
-import com.miki.animestylebackend.model.Role;
-import com.miki.animestylebackend.model.Token;
+import com.miki.animestylebackend.model.*;
 import com.miki.animestylebackend.repository.TokenRepository;
-import com.miki.animestylebackend.model.TokenType;
-import com.miki.animestylebackend.model.User;
 import com.miki.animestylebackend.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,18 +34,14 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final UserMapper userMapper;
-
     public AuthenticationResponse register(RegisterRequest request) {
         if (repository.existsByEmail(request.getEmail())) {
             throw new BadRequestException("Username is already taken!");
         }
-        var user = User.builder()
-                .firstname(request.getFirstname())
-                .lastname(request.getLastname())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.CUSTOMER)
-                .build();
+        UserBuilder userBuilder = new UserBuilder();
+        UserDirector userDirector = new UserDirector();
+        userDirector.constructCustomer(userBuilder, request.getFirstname(), request.getLastname(), request.getEmail(), passwordEncoder.encode(request.getPassword()));
+        var user = userBuilder.build();
         var savedUser = repository.save(user);
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);

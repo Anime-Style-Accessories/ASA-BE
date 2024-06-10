@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
-public class PaymentServiceImpl implements PaymentService {
+public class PaymentAdapter implements PaymentService {
 
     @Override
     public PaymentResDTO createPayment(HttpServletRequest req, BigDecimal amount) throws UnsupportedEncodingException {
