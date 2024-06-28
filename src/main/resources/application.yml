@@ -17,24 +17,14 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: 21522348@gm.uit.edu.vn
-    password: ncchoiprghnaxxnt
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: Iv1.6fb2d7b8ba5826ab
-            client-secret: 6434895e61d6694fa8c092bb3650a2eab7ee6b0b
-            scope:
-              - email
-              - profile
   data:
     redis:
       host: localhost
@@ -42,7 +32,7 @@ spring:
 application:
   security:
     jwt:
-      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      secret-key: ${JWT_SECRET_KEY}
       expiration: 86400000 # a day
       refresh-token:
         expiration: 604800000 # 7 days
